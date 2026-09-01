@@ -52,12 +52,15 @@
 
         <div class="pagination" v-if="totalPages > 1">
           <button :disabled="curPage === 1" @click="curPage--"><i class="fa-solid fa-chevron-left"></i></button>
+          
+          <!-- Đã sửa: lặp qua mảng visiblePages thay vì totalPages -->
           <button
-            v-for="n in totalPages"
+            v-for="n in visiblePages"
             :key="n"
             :class="{ active: curPage === n }"
             @click="curPage = n"
           >{{ n }}</button>
+          
           <button :disabled="curPage === totalPages" @click="curPage++"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
       </div>
@@ -138,6 +141,34 @@ export default {
       const start = (this.curPage - 1) * this.pageSize;
       return this.sortedProducts.slice(start, start + this.pageSize);
     },
+
+    // THÊM MỚI: Logic phân trang hiển thị 5 số
+    visiblePages() {
+      let startPage, endPage;
+      let maxVisible = 6;
+
+      if (this.totalPages <= maxVisible) {
+        startPage = 1;
+        endPage = this.totalPages;
+      } else {
+        if (this.curPage <= 3) {
+          startPage = 1;
+          endPage = maxVisible;
+        } else if (this.curPage + 2 >= this.totalPages) {
+          startPage = this.totalPages - 4;
+          endPage = this.totalPages;
+        } else {
+          startPage = this.curPage - 2;
+          endPage = this.curPage + 2;
+        }
+      }
+
+      let pages = [];
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
   },
   watch: {
     // Đổi danh mục/từ khóa tìm kiếm (qua router) -> luôn quay về trang 1

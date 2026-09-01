@@ -62,6 +62,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "wishlist" */ '@/views/WishlistView.vue'),
   },
   {
+    path: '/gioi-thieu',
+    name: 'introduce',
+    component: () => import(/* webpackChunkName: "introduce" */ '@/views/IntroduceView.vue'),
+  },
+  {
+    path: '/lien-he',
+    name: 'contact',
+    component: () => import(/* webpackChunkName: "contact" */ '@/views/ContactView.vue'),
+  },
+  {
+    path: '/cam-hung-sang-tao',
+    name: 'inspiration',
+    component: () => import(/* webpackChunkName: "inspiration" */ '@/views/InspirationView.vue'),
+  },
+  {
     // Bắt mọi đường dẫn không khớp -> quay về trang chủ thay vì trang trắng lỗi
     path: '*',
     redirect: '/',

@@ -10,8 +10,8 @@
         <i class="fa-solid" :class="mobileNavOpen ? 'fa-xmark' : 'fa-bars'"></i>
       </button>
 
-      <router-link to="/" class="logo">
-        <i class="fa-solid fa-chair"></i> {{ shopName }}
+      <router-link to="/">
+        <img class="logo" src="/images/logo.png"></img>
       </router-link>
 
       <div class="search-box">

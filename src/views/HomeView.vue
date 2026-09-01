@@ -11,22 +11,6 @@
           <span class="btn btn-accent">{{ content.heroPrimary.ctaText }} <i class="fa-solid fa-arrow-right"></i></span>
         </div>
       </router-link>
-
-      <div class="hero-secondary-stack">
-        <router-link
-          v-for="(banner, i) in content.heroSecondary"
-          :key="'hs' + i"
-          :to="categoryLink(banner.ctaCategory)"
-          class="hero-banner-card secondary"
-          :style="banner.image ? { backgroundImage: 'url(' + banner.image + ')' } : null"
-        >
-          <div v-if="!banner.hasOwnText">
-            <h3>{{ banner.title }}</h3>
-            <p>{{ banner.desc }}</p>
-            <span class="btn btn-accent">{{ banner.ctaText }}</span>
-          </div>
-        </router-link>
-      </div>
     </section>
 
     <!-- ===== DANH MỤC NỔI BẬT (lưới ảnh thật, lấy từ dữ liệu sản phẩm) ===== -->
@@ -49,7 +33,7 @@
     </div>
 
     <!-- ===== DẢI BANNER KHUYẾN MÃI ===== -->
-    <div class="promo-strip">
+    <!-- <div class="promo-strip">
       <router-link
         v-for="(promo, i) in content.promoStrip"
         :key="'promo' + i"
@@ -63,7 +47,7 @@
           <span class="pc-btn">Mua ngay</span>
         </template>
       </router-link>
-    </div>
+    </div> -->
 
     <!-- ===== MẪU MỚI ===== -->
     <div class="section-title">

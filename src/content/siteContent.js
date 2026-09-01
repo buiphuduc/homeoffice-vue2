@@ -23,7 +23,7 @@ export default {
     tag: config.shopName,
     title: 'Nội thất chất lượng cho không gian sống',
     desc: 'Tinh tế trong thiết kế — bền bỉ theo thời gian. Sản phẩm chất lượng với chất liệu chọn lọc.',
-    image: '/images/banners/hero-ghe-van-phong.jpg',
+    image: '/images/banners/hero-banner.jpg',
     // hasOwnText = true: ảnh đã có sẵn chữ/tiêu đề thiết kế trong hình -> KHÔNG
     // đè thêm chữ HTML lên trên nữa (tránh chồng 2 lớp chữ trông rối mắt).
     hasOwnText: true,
@@ -74,13 +74,16 @@ export default {
    * icon tròn đơn giản (không lỗi, không cần khai báo đủ hết).
    */
   categoryBanners: {
-    'Nội thất văn phòng': '/images/banners/cat-noi-that-van-phong.jpg',
-    'Phòng Khách': '/images/banners/cat-phong-khach.jpg',
-    'Bếp & Phòng Ăn': '/images/banners/cat-bep-phong-an.jpg',
-    'Phòng Ngủ': '/images/banners/cat-phong-ngu.jpg',
-    'Phòng Làm Việc': '/images/banners/cat-phong-lam-viec.jpg',
-    'Bàn ghế Cafe - Ngoài trời': '/images/banners/cat-ban-ghe-cafe.jpg',
-    'Phụ Kiện': '/images/banners/cat-phu-kien.jpg',
+    'Nội thất văn phòng': '/images/banners/noi-that-van-phong.jpg',
+    'Phòng Khách': '/images/banners/phong-khach.jpg',
+    'Bếp & Phòng Ăn': '/images/banners/bep-phong-an.jpg',
+    'Phòng Ngủ': '/images/banners/phong-ngu.jpg',
+    'Phòng Làm Việc': '/images/banners/phong-lam-viec.jpg',
+    'Bàn ghế Cafe - Ngoài trời': '/images/banners/ban-ghe-cafe.jpg',
+    'Phụ Kiện': '/images/banners/phu-kien.jpg',
+    'Ống Nước': '/images/banners/ong-nuoc.jpg',
+    'Trường Học': '/images/banners/truong-hoc.jpg',
+    'Phòng Tắm': '/images/banners/phong-tam.jpg',
   },
 
   /**
@@ -175,10 +178,11 @@ export default {
     {
       title: `Về ${config.shopName}`,
       items: [
-        { text: 'Giới thiệu' },
-        { text: 'Liên hệ' },
+        { text: 'Giới thiệu', link: '/gioi-thieu' },
+        { text: 'Liên hệ', link: '/lien-he' },
         { text: 'Tuyển dụng' },
         { text: 'Dự án đã thi công' },
+        { text: 'Cảm hứng sáng tạo', link: '/cam-hung-sang-tao' },
       ],
     },
     {

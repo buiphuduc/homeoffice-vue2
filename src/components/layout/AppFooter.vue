@@ -13,7 +13,7 @@
           </template>
           <!-- Các cột còn lại: nội dung tĩnh mô tả (chưa có hệ thống trang CMS nên hiển thị dạng chữ, không phải link) -->
           <template v-else>
-            <li v-for="(item, j) in col.items" :key="j">{{ item.text }}</li>
+            <li v-for="(item, j) in col.items" :key="j"><a :href="item?.link">{{ item.text }}</a></li>
           </template>
         </ul>
       </div>
