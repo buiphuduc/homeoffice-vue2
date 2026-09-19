@@ -80,7 +80,7 @@
 
     <!-- ===== TỪNG KHỐI SẢN PHẨM THEO NGÀNH HÀNG (lặp lại cho mỗi danh mục cấp 1) ===== -->
     <template v-for="cat in topCategories">
-      <div class="section-title" :key="'st-' + cat">
+      <div class="section-title">
         <h2>{{ cat }}</h2>
         <router-link class="see-all" :to="categoryLink([cat])">Xem tất cả</router-link>
       </div>
@@ -105,7 +105,6 @@
       </div>
 
       <product-grid
-        :key="'pg-' + cat"
         :products="productsOf(cat)"
         :loading="false"
         empty-text="Chưa có sản phẩm trong danh mục này."

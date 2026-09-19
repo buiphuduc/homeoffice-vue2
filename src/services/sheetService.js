@@ -71,7 +71,7 @@ function mapCsvRowToProduct(row, index) {
     shortDesc: (row['Short description'] || '').trim(),
     desc: (row['Description'] || '').trim(),
     inStock: (row['In stock?'] || 'instock').trim().toLowerCase() !== 'outofstock',
-    published: String(row['Published']) !== '0',
+    published: String(row['Published']).trim().toLowerCase() === 'yes',
   };
 }
 

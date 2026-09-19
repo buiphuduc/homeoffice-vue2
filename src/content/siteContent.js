@@ -36,35 +36,35 @@ export default {
    * "KỆ NHÀ BẾP" ở site gốc). Thêm/bớt banner bằng cách thêm/xóa phần
    * tử trong mảng này.
    */
-  heroSecondary: [
-    {
-      title: 'Không gian làm việc rộng rãi',
-      desc: 'Nâng tầm hiệu suất làm việc.',
-      image: '/images/banners/hero-phong-lam-viec.jpg',
-      hasOwnText: true,
-      ctaText: 'Mua ngay',
-      ctaCategory: [],
-    },
-    {
-      title: 'Kệ nhà bếp gọn gàng',
-      desc: 'Tiện lợi · Hiện đại.',
-      image: '/images/banners/hero-ke-nha-bep.jpg',
-      hasOwnText: true,
-      ctaText: 'Mua ngay',
-      ctaCategory: [],
-    },
-  ],
+  // heroSecondary: [
+  //   {
+  //     title: 'Không gian làm việc rộng rãi',
+  //     desc: 'Nâng tầm hiệu suất làm việc.',
+  //     image: '/images/banners/hero-phong-lam-viec.jpg',
+  //     hasOwnText: true,
+  //     ctaText: 'Mua ngay',
+  //     ctaCategory: [],
+  //   },
+  //   {
+  //     title: 'Kệ nhà bếp gọn gàng',
+  //     desc: 'Tiện lợi · Hiện đại.',
+  //     image: '/images/banners/hero-ke-nha-bep.jpg',
+  //     hasOwnText: true,
+  //     ctaText: 'Mua ngay',
+  //     ctaCategory: [],
+  //   },
+  // ],
 
   /**
    * Dải banner khuyến mãi 4 ô dưới hero (giống "BÀN CONSOLE / KỆ ĐỂ GIÀY..."
    * ở site gốc). ctaCategory để trống [] = trỏ về trang tất cả sản phẩm.
    */
-  promoStrip: [
-    { eyebrow: 'Ưu đãi', title: 'Bàn Console', image: '/images/banners/promo-ban-console.jpg', hasOwnText: false, ctaCategory: [] },
-    { eyebrow: 'Ưu đãi', title: 'Ghế Sofa', image: '/images/banners/promo-ghe-sofa.jpg', hasOwnText: false, ctaCategory: [] },
-    { eyebrow: 'Ưu đãi', title: 'Ghế Làm Việc', image: '/images/banners/promo-ghe-lam-viec.jpg', hasOwnText: false, ctaCategory: [] },
-    { eyebrow: 'Ưu đãi', title: 'Tủ Đầu Giường', image: '/images/banners/promo-tu-dau-giuong.jpg', hasOwnText: false, ctaCategory: [] },
-  ],
+  // promoStrip: [
+  //   { eyebrow: 'Ưu đãi', title: 'Bàn Console', image: '/images/banners/promo-ban-console.jpg', hasOwnText: false, ctaCategory: [] },
+  //   { eyebrow: 'Ưu đãi', title: 'Ghế Sofa', image: '/images/banners/promo-ghe-sofa.jpg', hasOwnText: false, ctaCategory: [] },
+  //   { eyebrow: 'Ưu đãi', title: 'Ghế Làm Việc', image: '/images/banners/promo-ghe-lam-viec.jpg', hasOwnText: false, ctaCategory: [] },
+  //   { eyebrow: 'Ưu đãi', title: 'Tủ Đầu Giường', image: '/images/banners/promo-tu-dau-giuong.jpg', hasOwnText: false, ctaCategory: [] },
+  // ],
 
   /**
    * Banner riêng cho từng danh mục cấp 1 (hiển thị phía trên mỗi khối
