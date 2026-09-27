@@ -1,5 +1,5 @@
 <template>
-  <header class="site-header">
+  <header class="site-header" :class="{ 'is-scrolled': isScrolled }">
     <div class="container header-main">
       <button
         class="mobile-nav-toggle"
@@ -29,13 +29,13 @@
         <router-link to="/yeu-thich" class="h-action">
           <i class="fa-regular fa-heart"></i>
           <span>Yêu thích</span>
-          <span class="count" v-if="wishlistCount">{{ wishlistCount }}</span>
+          <span class="count" :class="{ 'is-bumping': wishlistBump }" v-if="wishlistCount">{{ wishlistCount }}</span>
         </router-link>
 
         <router-link to="/gio-hang" class="h-action">
           <i class="fa-solid fa-cart-shopping"></i>
           <span>Giỏ hàng</span>
-          <span class="count" v-if="cartCount">{{ cartCount }}</span>
+          <span class="count" :class="{ 'is-bumping': cartBump }" v-if="cartCount">{{ cartCount }}</span>
         </router-link>
       </div>
     </div>
@@ -60,6 +60,13 @@ export default {
       // hamburger, truyền xuống MegaMenu.vue qua prop. Đóng lại tự động khi
       // người dùng bấm 1 link danh mục (xem sự kiện @navigate).
       mobileNavOpen: false,
+      // true khi trang đã cuộn xuống 1 đoạn -> hiện bóng đổ dưới header,
+      // giúp phân biệt header với nội dung đang đè lên nó (header sticky).
+      isScrolled: false,
+      // Bật/tắt animation "nảy" của badge số lượng trong ~350ms mỗi khi
+      // số lượng giỏ hàng/yêu thích thay đổi (thêm/bớt sản phẩm).
+      cartBump: false,
+      wishlistBump: false,
     };
   },
   computed: {
@@ -72,6 +79,19 @@ export default {
     $route() {
       this.mobileNavOpen = false;
     },
+    cartCount() {
+      this.triggerBump('cartBump');
+    },
+    wishlistCount() {
+      this.triggerBump('wishlistBump');
+    },
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
+    this.handleScroll();
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
     handleSearch() {
@@ -79,6 +99,18 @@ export default {
       if (!q) return;
       this.mobileNavOpen = false;
       this.$router.push({ name: 'listing', query: { q } });
+    },
+    handleScroll() {
+      this.isScrolled = window.scrollY > 8;
+    },
+    triggerBump(flag) {
+      this[flag] = false;
+      // Đợi 1 tick để Vue gỡ class ra rồi mới gắn lại -> animation chạy lại
+      // được ngay cả khi số lượng đổi liên tiếp nhiều lần nhanh.
+      this.$nextTick(() => {
+        this[flag] = true;
+        setTimeout(() => { this[flag] = false; }, 350);
+      });
     },
   },
 };

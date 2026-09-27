@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import './assets/css/main.css';
+import RevealDirective from './utils/revealDirective';
 
 /**
  * src/main.js
@@ -14,6 +15,7 @@ import './assets/css/main.css';
  */
 Vue.config.productionTip = false;
 Vue.config.devtools = true
+Vue.use(RevealDirective);
 
 new Vue({
   router,

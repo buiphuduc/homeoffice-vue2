@@ -14,10 +14,10 @@
     </section>
 
     <!-- ===== DANH MỤC NỔI BẬT (lưới ảnh thật, lấy từ dữ liệu sản phẩm) ===== -->
-    <div class="section-title" v-if="featuredSubcategories.length">
+    <div class="section-title" v-if="featuredSubcategories.length" v-reveal>
       <h2>Danh mục nổi bật</h2>
     </div>
-    <div class="cat-photo-grid" v-if="featuredSubcategories.length">
+    <div class="cat-photo-grid" v-if="featuredSubcategories.length" v-reveal="80">
       <router-link
         v-for="fc in featuredSubcategories"
         :key="fc.path.join('>')"
@@ -50,7 +50,7 @@
     </div> -->
 
     <!-- ===== MẪU MỚI ===== -->
-    <div class="section-title">
+    <div class="section-title" v-reveal>
       <h2>Mẫu mới</h2>
       <router-link class="see-all" to="/danh-muc">Xem tất cả</router-link>
     </div>
@@ -65,10 +65,10 @@
     ></product-grid>
 
     <!-- ===== 4 TÍNH NĂNG NỔI BẬT ===== -->
-    <div class="section-title">
+    <div class="section-title" v-reveal>
       <h2>Vì sao chọn {{ shopName }}</h2>
     </div>
-    <div class="feature-highlights">
+    <div class="feature-highlights" v-reveal="80">
       <div class="feature-item" v-for="f in content.featureHighlights" :key="f.number">
         <div class="fi-num">{{ f.number }}</div>
         <div>
@@ -80,7 +80,7 @@
 
     <!-- ===== TỪNG KHỐI SẢN PHẨM THEO NGÀNH HÀNG (lặp lại cho mỗi danh mục cấp 1) ===== -->
     <template v-for="cat in topCategories">
-      <div class="section-title">
+      <div class="section-title" :key="'st-' + cat" v-reveal>
         <h2>{{ cat }}</h2>
         <router-link class="see-all" :to="categoryLink([cat])">Xem tất cả</router-link>
       </div>

@@ -167,6 +167,25 @@ export default {
    * site không có hệ thống trang tĩnh (CMS pages) như site gốc, tránh
    * tạo link giả dẫn tới trang không tồn tại.
    */
+  /**
+   * Thông tin pháp lý / liên hệ chính thức của công ty — dùng ở trang
+   * Liên hệ (bản đồ + khối thông tin). Đây là dữ liệu THẬT, khi cần đổi
+   * (chuyển địa chỉ, đổi email...) chỉ cần sửa ở đây, trang Liên hệ tự
+   * cập nhật theo, không phải sửa trong ContactView.vue.
+   */
+  companyInfo: {
+    legalName: 'CÔNG TY TNHH KỸ THUẬT HTM',
+    address: '354/47/12/57 Quốc lộ 1A, Phường Bình Tân, Tp. Hồ Chí Minh, Việt Nam',
+    taxCode: '0319.078.988',
+    email: 'kythuathtmvn@gmail.com',
+    // Hotline hiển thị/gọi lấy chung từ config (đã đồng bộ trong .env) để
+    // không bị lệch số giữa các nơi hiển thị (header, FAB, footer, trang này).
+    phoneDisplay: config.hotlineDisplay,
+    phoneTel: config.hotlineTel,
+    // Chuỗi địa chỉ dùng để nhúng Google Maps (không cần API key).
+    mapQuery: '354/47/12/57 Quốc lộ 1A, Phường Bình Tân, Hồ Chí Minh, Việt Nam',
+  },
+
   footerColumns: [
     {
       title: 'Hỗ trợ khách hàng',

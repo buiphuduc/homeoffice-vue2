@@ -131,6 +131,53 @@ header.site-header{background:#F0EBE2;border-bottom:1px solid var(--line);positi
 .feature-item h4{margin:0 0 6px;font-size:14.5px;}
 .feature-item p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.6;}
 
+/* ============================================================
+   HIỆU ỨNG CHUYỂN ĐỘNG (thêm để trang chủ đỡ "khô", vẫn giữ tối giản)
+   ============================================================ */
+
+/* --- Cuộn tới đâu hiện dần tới đó (v-reveal directive) --- */
+.reveal-init{opacity:0;transform:translateY(22px);transition:opacity .6s ease, transform .6s ease;}
+.reveal-init.is-revealed{opacity:1;transform:none;}
+
+/* --- Hero: hiện nhẹ nhàng ngay khi trang tải xong (không cần chờ cuộn) --- */
+@keyframes heroFadeIn{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:none;}
+}
+.hero-grid{animation:heroFadeIn .7s ease both;}
+
+/* --- Zoom ảnh nhẹ khi hover: card sản phẩm + card danh mục --- */
+.card .thumb img{transition:transform .45s ease;}
+.card:hover .thumb img{transform:scale(1.06);}
+.cat-photo-card .cpc-thumb img{transition:transform .45s ease;}
+.cat-photo-card:hover .cpc-thumb img{transform:scale(1.08);}
+
+/* --- Phản hồi khi bấm nút / icon (cảm giác "vật lý") --- */
+.btn{transition:background-color .2s, border-color .2s, color .2s, transform .12s ease, box-shadow .2s;}
+.btn:active:not(:disabled){transform:scale(.96);}
+.qa-btn{transition:background-color .15s, color .15s, border-color .15s, transform .12s ease;}
+.qa-btn:active{transform:scale(.9);}
+.color-swatch{transition:border-color .15s, box-shadow .15s, transform .12s ease;}
+.color-swatch:active{transform:scale(.92);}
+
+/* --- Header nổi bóng khi cuộn xuống --- */
+header.site-header{transition:box-shadow .25s ease;}
+header.site-header.is-scrolled{box-shadow:0 6px 18px rgba(43,38,32,.08);}
+
+/* --- Badge số lượng giỏ hàng/yêu thích nảy nhẹ khi thay đổi --- */
+@keyframes badgeBump{
+  0%{transform:scale(1);}
+  35%{transform:scale(1.35);}
+  100%{transform:scale(1);}
+}
+.h-action .count.is-bumping{animation:badgeBump .35s ease;}
+
+/* Tôn trọng người dùng tắt hiệu ứng chuyển động ở hệ điều hành */
+@media (prefers-reduced-motion: reduce){
+  .reveal-init{opacity:1;transform:none;transition:none;}
+  .card .thumb img,.cat-photo-card .cpc-thumb img,.hero-banner-card,.btn,.qa-btn,.color-swatch,header.site-header{transition:none;}
+}
+
 /* ---------- Nút liên hệ nổi góc phải màn hình ---------- */
 .fab-col{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:90;}
 .fab{

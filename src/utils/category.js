@@ -72,6 +72,18 @@ export function getFeaturedSubcategories(products, limit = 16) {
 }
 
 /**
+ * Tạo route-location tới trang danh mục sản phẩm (ListingView) ứng với
+ * 1 đường dẫn danh mục — dùng chung ở nhiều trang (Trang chủ, Cảm hứng
+ * sáng tạo, bài viết chi tiết...) để không lặp lại logic xây route.
+ * @param {string[]} path - ví dụ ['Phòng Khách', 'Bàn Sofa']
+ * @returns {object|string}
+ */
+export function categoryLink(path) {
+  if (!path || !path.length) return '/danh-muc';
+  return { name: 'listing', query: { cat: path.join('/') } };
+}
+
+/**
  * Kiểm tra 1 danh mục có "cháu" (cấp 3) hay không — dùng để quyết định
  * mega menu hiển thị dạng lưới nhiều cột hay dropdown đơn giản.
  * @param {object[]} products
@@ -82,4 +94,3 @@ export function hasGrandchildren(products, topCategory) {
   const children = getChildCategories(products, [topCategory]);
   return children.some((child) => getChildCategories(products, [topCategory, child]).length > 0);
 }
-

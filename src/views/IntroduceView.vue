@@ -4,11 +4,16 @@
       <!-- Hero Section -->
       <section class="container hero-section">
         <div class="hero-card group">
-          <img 
-            alt="Nordique Workshop" 
-            class="hero-img" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkA0zG_VbytZQcnefmmEWBElV1f8NJL6Gmz-ilwloJXCVd4cOZ8veZG8Nx-iI1HkqET-9eBQPB6zpO3xntTHuu3MqZLqYXKCnD0MZf8ebfUAKpj8UXVZIKFeJdDRdtWQM3nZOA76FHLBcF1P1JP5sh-CAZCaXw_-2tZ2oJePQ1lUvyWKAsTL7MVarF9qmkUn4IK7nf4pz-Wo1g6tUOFAsZtCEwpXGONX1SY5yMGWdVtn0GNY_X2JoRxA" 
+          <img
+            v-show="!heroBroken"
+            alt="Xưởng sản xuất nội thất HTMVN — không gian chế tác gỗ theo phong cách Bắc Âu tối giản"
+            class="hero-img"
+            src="/images/gioi-thieu/hero-xuong-che-tac.jpg"
+            @error="heroBroken = true"
           />
+          <div class="img-fallback" v-if="heroBroken">
+            <span class="material-symbols-outlined">photo_camera</span>
+          </div>
           <div class="hero-overlay"></div>
         </div>
       </section>
@@ -17,10 +22,10 @@
       <section class="container quote-section">
         <div class="quote-content">
           <h1 class="display-text text-primary">
-            "Thiết kế không chỉ là hình khối, mà là cảm giác bình yên khi ánh sáng chạm vào bề mặt gỗ."
+            "Thiết kế đẹp bắt đầu từ sự chính xác — nơi kỹ thuật gặp gỡ cảm xúc, và từng thớ gỗ được kể lại bằng một ngôn ngữ tối giản, ấm áp."
           </h1>
           <p class="body-text text-variant mt-lg">
-            Tại Nordique, chúng tôi tin rằng nội thất không chỉ để lấp đầy không gian, mà để tạo ra một chốn về mang đậm tinh thần Hygge. Sự tĩnh lặng, chức năng và vẻ đẹp vượt thời gian là cốt lõi trong mọi tác phẩm.
+            {{ shopName }} là thương hiệu nội thất trực thuộc {{ company.legalName }} — nơi tư duy kỹ thuật chính xác của một đơn vị gia công, lắp đặt lâu năm hội tụ cùng gu thẩm mỹ Bắc Âu tối giản. Chúng tôi tin rằng nội thất không chỉ để lấp đầy không gian, mà để tạo ra một chốn về mang đậm tinh thần Hygge: tĩnh lặng, đúng công năng và bền theo thời gian trong mọi tác phẩm, từ phòng khách, phòng ngủ đến không gian làm việc.
           </p>
         </div>
       </section>
@@ -30,38 +35,38 @@
         <div class="timeline-header">
           <h2 class="headline-text text-surface">Hành trình của chúng tôi</h2>
         </div>
-        
+
         <div class="timeline-grid">
           <!-- Milestone 1 -->
           <div class="timeline-item group">
-            <div class="timeline-year text-primary">2015</div>
-            <h3 class="timeline-title text-surface group-hover-primary">Khởi đầu</h3>
+            <div class="timeline-year text-primary">Giai đoạn 01</div>
+            <h3 class="timeline-title text-surface group-hover-primary">Nền tảng kỹ thuật</h3>
             <p class="timeline-desc text-variant">
-              Một xưởng gỗ nhỏ tại ngoại ô ra đời với khao khát tôn vinh vẻ đẹp nguyên bản của vật liệu tự nhiên.
+              Khởi nguồn từ đội ngũ kỹ thuật chuyên gia công, lắp đặt công trình — nền tảng tạo nên sự chính xác trong từng mối ghép nội thất sau này.
             </p>
           </div>
           <!-- Milestone 2 -->
           <div class="timeline-item group">
-            <div class="timeline-year text-primary">2018</div>
-            <h3 class="timeline-title text-surface group-hover-primary">BST Đầu tiên</h3>
+            <div class="timeline-year text-primary">Giai đoạn 02</div>
+            <h3 class="timeline-title text-surface group-hover-primary">Định hình phong cách</h3>
             <p class="timeline-desc text-variant">
-              Ra mắt bộ sưu tập mang âm hưởng Bắc Âu, kết hợp giữa kỹ thuật thủ công truyền thống và tư duy hiện đại.
+              Phát triển dòng sản phẩm nội thất mang tinh thần Scandinavian: đường nét tối giản, vật liệu tự nhiên, ưu tiên sự tiện dụng lâu dài.
             </p>
           </div>
           <!-- Milestone 3 -->
           <div class="timeline-item group">
-            <div class="timeline-year text-primary">2021</div>
-            <h3 class="timeline-title text-surface group-hover-primary">Mở rộng</h3>
+            <div class="timeline-year text-primary">Giai đoạn 03</div>
+            <h3 class="timeline-title text-surface group-hover-primary">Mở rộng danh mục</h3>
             <p class="timeline-desc text-variant">
-              Khai trương showroom đầu tiên tại trung tâm, tạo không gian trải nghiệm xúc giác chân thực cho khách hàng.
+              Phủ khắp các không gian sống: phòng khách, bếp & phòng ăn, phòng ngủ, phòng tắm, nội thất văn phòng, ngoài trời và cả các giải pháp kỹ thuật công trình.
             </p>
           </div>
           <!-- Milestone 4 -->
           <div class="timeline-item group">
-            <div class="timeline-year text-primary">2024</div>
-            <h3 class="timeline-title text-surface group-hover-primary">Vươn xa</h3>
+            <div class="timeline-year text-primary">Hiện tại</div>
+            <h3 class="timeline-title text-surface group-hover-primary">Đồng hành cùng khách hàng</h3>
             <p class="timeline-desc text-variant">
-              Định hình phong cách sống hiện đại, mang triết lý tĩnh tại vào mọi ngóc ngách của không gian sống.
+              {{ shopName }} phục vụ khách hàng trên toàn quốc qua nền tảng trực tuyến, với showroom tại {{ company.address }}.
             </p>
           </div>
         </div>
@@ -71,55 +76,70 @@
       <section class="container bento-section">
         <div class="bento-header">
           <h2 class="headline-text text-surface bento-title">Bàn tay tài hoa đằng sau mỗi thiết kế</h2>
-          <a class="bento-link text-primary group" href="#">
-            Tìm hiểu thêm về vật liệu
+          <router-link class="bento-link text-primary group" to="/danh-muc">
+            Khám phá sản phẩm
             <span class="material-symbols-outlined bento-icon">arrow_forward</span>
-          </a>
+          </router-link>
         </div>
-        
+
         <div class="bento-grid">
           <!-- Large Feature Image -->
           <div class="bento-card col-span-2 group">
-            <img 
-              alt="Designers working" 
-              class="bento-img" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA83TGEK0gRgSgvebvfQFZHXH_1NQlbEIPnws7iqh6kb-W0gHcTnU0c-YkazgCnKl8ZZDCTLnZXNI3rLhuNJqnvdBDXJg15OPpvK1Iu04Gy4gR-GokZbMwaBfQpmjIcouBNgF2EsIf4WW3FArjG4llDxnsc9LSvZf_FuS96p1A2CPEhtLBNDQ_MxX4SBmP_nZoywuBqziJ2SSg1Yso-i-SuKLKsvN9OLHVTJYbbfeVb5FQ8hj38Jx7g3Q" 
+            <img
+              v-show="!bentoBroken.large"
+              alt="Đội ngũ kỹ thuật và thiết kế HTMVN trong xưởng chế tác nội thất"
+              class="bento-img"
+              src="/images/gioi-thieu/xuong-thiet-ke.jpg"
+              @error="bentoBroken.large = true"
             />
+            <div class="img-fallback" v-if="bentoBroken.large">
+              <span class="material-symbols-outlined">photo_camera</span>
+            </div>
             <div class="bento-overlay">
-              <p class="bento-tag text-on-primary">Studio Thiết kế</p>
-              <p class="bento-desc text-on-primary-dim">Nơi những ý tưởng hình thành từ những bản phác thảo và xúc cảm ban sơ nhất.</p>
+              <p class="bento-tag text-on-primary">Xưởng thiết kế & kỹ thuật</p>
+              <p class="bento-desc text-on-primary-dim">Nơi bản vẽ kỹ thuật và ý tưởng thẩm mỹ gặp nhau — mỗi sản phẩm đều được tính toán về kết cấu trước khi thành hình.</p>
             </div>
           </div>
-          
+
           <!-- Secondary Image 1 -->
           <div class="bento-card group">
-            <img 
-              alt="Artisan working" 
-              class="bento-img" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuADHFZ0Hi-hTD5TzEh3zYtLsjxfADXPgvJCymRwY1am6-cN6N7fwXcqagpkgmqheyaZ-yJQ6XkTl3Ybfh7hHz21MZlu4OfyzB8LBpcG5gHGf60fQ3_0KobvyQYihgUETSheWTBZ5loDIOQEZVY8lvRNXmKZ0t6zdKOjAT6Mt3NUcaKr3vDZoJfVAaipC4Nc3Yf0uLOIro3DL-dKhXDCCtXJZ1QOw_LcabVPt6aT27y3I4_CeC3N19S08g" 
+            <img
+              v-show="!bentoBroken.artisan"
+              alt="Người thợ đang hoàn thiện chi tiết đồ gỗ nội thất"
+              class="bento-img"
+              src="/images/gioi-thieu/nghe-nhan-hoan-thien.jpg"
+              @error="bentoBroken.artisan = true"
             />
+            <div class="img-fallback" v-if="bentoBroken.artisan">
+              <span class="material-symbols-outlined">photo_camera</span>
+            </div>
             <div class="bento-overlay-small">
-              <p class="bento-tag text-on-primary">Nghệ nhân</p>
+              <p class="bento-tag text-on-primary">Người thợ hoàn thiện</p>
             </div>
           </div>
-          
+
           <!-- Secondary Image 2 -->
           <div class="bento-card group">
-            <img 
-              alt="Wood joinery close up" 
-              class="bento-img" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-iJVJXANuBHU9rKGylmCMNEvs8IcweEAv5Lp74sxjlMpFtBZ4IoAL8A5rB5ZksWXyHo4WnZgRepMiuBPTBH4eqpF3DYsmKFYQdSHmCmIsFJDWJ12-vlfS0Z_4oT737jc86RkvpskoN0GQ92VeVUUNyOUV_nVgBpnROxrujg0HsjY1Hb1F7Jfhy3VMayr8_UiXMZDOmGS1V2gYnkA2nsElmt9LRvy3OvtutvKRuRtWf-jEhKCU68op7Q" 
+            <img
+              v-show="!bentoBroken.detail"
+              alt="Cận cảnh mối ghép mộng gỗ tự nhiên"
+              class="bento-img"
+              src="/images/gioi-thieu/chi-tiet-moi-ghep.jpg"
+              @error="bentoBroken.detail = true"
             />
+            <div class="img-fallback" v-if="bentoBroken.detail">
+              <span class="material-symbols-outlined">photo_camera</span>
+            </div>
             <div class="bento-overlay-small">
-              <p class="bento-tag text-on-primary">Chi tiết</p>
+              <p class="bento-tag text-on-primary">Chi tiết mối ghép</p>
             </div>
           </div>
-          
+
           <!-- Text Card -->
           <div class="bento-text-card col-span-2">
             <h3 class="bento-text-title text-on-secondary">Sự tỉ mỉ trong từng thớ gỗ</h3>
             <p class="bento-text-desc text-on-secondary-variant">
-              Mỗi đường cong, mỗi khớp nối không chỉ là kỹ thuật, mà là sự tôn trọng sâu sắc đối với vật liệu. Chúng tôi chọn lọc những loại gỗ tốt nhất, để theo thời gian, sản phẩm không chỉ bền bỉ mà còn mang dấu ấn riêng của gia chủ.
+              Mỗi đường cong, mỗi mối ghép không chỉ là kỹ thuật, mà là sự tôn trọng đối với vật liệu. Chúng tôi tuyển chọn kỹ càng từ gỗ sồi tự nhiên nguyên khối, gỗ tự nhiên phủ veneer sơn PU, đến gỗ công nghiệp MDF/MFC phủ Melamine hay Laminate chống ẩm — kết hợp cùng khung thép sơn tĩnh điện, mặt kính cường lực hay đá Quartz nhân tạo cho từng dòng sản phẩm phù hợp. Nhờ vậy, theo thời gian sản phẩm không chỉ bền bỉ mà còn mang dấu ấn riêng của gia chủ.
             </p>
           </div>
         </div>
@@ -129,11 +149,33 @@
 </template>
 
 <script>
+import config from '@/config';
+import siteContent from '@/content/siteContent';
+
+/**
+ * src/views/IntroduceView.vue
+ * ------------------------------------------------------------------
+ * Trang Giới thiệu — GIỮ NGUYÊN bố cục & hiệu ứng CSS gốc (hero zoom
+ * hover, bento grid zoom hover, mũi tên trượt khi hover link...), chỉ
+ * thay nội dung chữ cho đúng với thương hiệu thật ({{ shopName }} /
+ * {{ company.legalName }}) và thay ảnh demo (link Google AIDA) bằng
+ * đường dẫn ảnh cục bộ — xem prompt tạo ảnh AI tương ứng ở phần trả lời
+ * kèm theo, đặt file đúng tên vào public/images/gioi-thieu/.
+ *
+ * Nếu ảnh thật chưa có/lỗi 404, tự động hiện icon placeholder thay vì
+ * icon "ảnh vỡ" xấu xí (cùng cách xử lý với ProductGallery.vue).
+ * ------------------------------------------------------------------
+ */
 export default {
   name: 'IntroduceView',
   data() {
-    return {};
-  }
+    return {
+      shopName: config.shopName,
+      company: siteContent.companyInfo,
+      heroBroken: false,
+      bentoBroken: { large: false, artisan: false, detail: false },
+    };
+  },
 };
 </script>
 
@@ -264,6 +306,20 @@ export default {
 }
 .group:hover .hero-img {
   transform: scale(1.05);
+}
+
+/* Placeholder hiện khi ảnh chưa có / load lỗi (404) — tránh icon "ảnh vỡ" */
+.img-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--secondary-fixed), var(--surface-container-low));
+}
+.img-fallback .material-symbols-outlined {
+  font-size: 48px;
+  color: var(--outline-variant);
 }
 
 /* Quote Section */

@@ -77,6 +77,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "inspiration" */ '@/views/InspirationView.vue'),
   },
   {
+    path: '/cam-hung-sang-tao/:slug',
+    name: 'inspiration-article',
+    component: () => import(/* webpackChunkName: "inspiration-article" */ '@/views/InspirationArticleView.vue'),
+    props: true,
+  },
+  {
     // Bắt mọi đường dẫn không khớp -> quay về trang chủ thay vì trang trắng lỗi
     path: '*',
     redirect: '/',
