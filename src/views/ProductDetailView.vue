@@ -174,6 +174,7 @@ import ShippingWarrantyPolicy from '@/components/product/ShippingWarrantyPolicy.
 import productActionsMixin from '@/mixins/productActions';
 import { formatVND } from '@/utils/format';
 import { productMatchesCategoryPath } from '@/utils/category';
+import { setPageMeta } from '@/utils/seo';
 
 export default {
   name: 'ProductDetailView',
@@ -264,6 +265,7 @@ export default {
       this.qty = 1;
       this.selectedColor = this.productColors.length ? this.productColors[0] : null;
       this.selectedMaterial = this.productMaterials.length ? this.productMaterials[0] : null;
+      this.updateSeo(p);
     },
   },
   created() {
@@ -274,10 +276,24 @@ export default {
       if (this.productMaterials.length) {
         this.selectedMaterial = this.productMaterials[0];
       }
+      this.updateSeo(this.product);
     }
   },
   methods: {
     formatVND,
+    // Tiêu đề/mô tả/ảnh SEO đổi theo đúng sản phẩm đang xem — gọi lại mỗi
+    // khi `product` có dữ liệu hoặc đổi sang sản phẩm khác (params.id đổi).
+    // Xem ghi chú giới hạn SPA (Facebook/Zalo preview) trong src/utils/seo.js.
+    updateSeo(p) {
+      if (!p) return;
+      const rawDesc = p.shortDesc || (p.desc ? p.desc.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : '');
+      setPageMeta({
+        title: p.name,
+        description: rawDesc ? rawDesc.slice(0, 160) : undefined,
+        image: p.images && p.images[0] ? p.images[0] : undefined,
+        path: this.$route.fullPath,
+      });
+    },
     buyNow() {
       this.handleAddToCart(this.product, this.qty, this.selectedColor);
       this.$router.push({ name: 'checkout' });

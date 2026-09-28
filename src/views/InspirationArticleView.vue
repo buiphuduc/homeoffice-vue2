@@ -98,6 +98,7 @@
 import config from '@/config';
 import articles from '@/content/inspirationArticles';
 import { categoryLink } from '@/utils/category';
+import { setPageMeta } from '@/utils/seo';
 
 /**
  * src/views/InspirationArticleView.vue
@@ -141,11 +142,25 @@ export default {
     slug() {
       this.imgBroken = {};
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.updateSeo();
     },
+  },
+  created() {
+    this.updateSeo();
   },
   methods: {
     imgErr(key) {
       this.$set(this.imgBroken, key, true);
+    },
+    // Tiêu đề/mô tả/ảnh SEO theo đúng bài viết đang xem.
+    updateSeo() {
+      if (!this.article) return;
+      setPageMeta({
+        title: this.article.title,
+        description: this.article.excerpt,
+        image: `${config.siteUrl}${this.article.cover}`,
+        path: this.$route.fullPath,
+      });
     },
   },
 };

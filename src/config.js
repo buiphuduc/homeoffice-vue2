@@ -16,6 +16,9 @@ export default {
   messengerUsername: process.env.VUE_APP_MESSENGER_USERNAME || '',
   hotlineDisplay: process.env.VUE_APP_HOTLINE_DISPLAY || '',
   hotlineTel: process.env.VUE_APP_HOTLINE_TEL || '',
+  // Domain thật khi lên production — dùng để tạo canonical link/sitemap
+  // (xem src/utils/seo.js, scripts/generate-sitemap.js). Bỏ dấu / cuối.
+  siteUrl: (process.env.VUE_APP_SITE_URL || 'https://htmvn.com').replace(/\/$/, ''),
 
   // Các hằng số hành vi của app — gom vào đây để dễ chỉnh cùng 1 chỗ
   cart: {

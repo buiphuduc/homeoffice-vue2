@@ -76,6 +76,7 @@ import ProductGrid from '@/components/product/ProductGrid.vue';
 import QuickViewModal from '@/components/product/QuickViewModal.vue';
 import productActionsMixin from '@/mixins/productActions';
 import { productMatchesCategoryPath } from '@/utils/category';
+import { setPageMeta } from '@/utils/seo';
 import config from '@/config';
 
 /**
@@ -180,6 +181,18 @@ export default {
     },
     sortKey() {
       this.curPage = 1;
+    },
+    // Đổi danh mục/từ khóa -> tiêu đề SEO đổi theo (vd "Phòng Khách - HTMVN Shop").
+    // immediate:true để chạy luôn cả lúc mới vào trang, không cần thêm created().
+    pageTitle: {
+      immediate: true,
+      handler(title) {
+        setPageMeta({
+          title,
+          description: `Xem ${title.toLowerCase()} tại ${config.shopName} — giao hàng toàn quốc, bảo hành dài hạn.`,
+          path: this.$route.fullPath,
+        });
+      },
     },
   },
   methods: {

@@ -211,6 +211,9 @@ export default {
         { text: 'Hướng dẫn đặt hàng' },
         { text: 'Chính sách vận chuyển' },
         { text: 'Chính sách bảo hành' },
+        { text: 'Chính sách đổi trả', link: '/chinh-sach/doi-tra' },
+        { text: 'Chính sách bảo mật', link: '/chinh-sach/bao-mat' },
+        { text: 'Điều khoản sử dụng', link: '/chinh-sach/dieu-khoan' },
       ],
     },
     {
