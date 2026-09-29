@@ -15,7 +15,8 @@
  */
 export function formatVND(amount) {
   const n = Number(amount) || 0;
-  return Math.round(n).toLocaleString('vi-VN') + ' đ';
+  // \u00A0 = dấu cách KHÔNG ngắt dòng: chữ "đ" luôn dính liền số tiền, không bị rớt xuống dòng riêng
+  return `${Math.round(n).toLocaleString('vi-VN')}\u00A0đ`;
 }
 
 /**

@@ -36,7 +36,8 @@
           </div>
           
           <div class="tax-shipping-note">
-            Giá đã bao gồm thuế. Miễn phí giao hàng toàn quốc.
+            Giá đã bao gồm thuế. Phí vận chuyển tính theo khu vực giao hàng —
+            <router-link :to="{ name: 'legal-page', params: { slug: 'van-chuyen' } }" class="policy-link">xem chính sách vận chuyển</router-link>.
           </div>
 
           <hr class="divider" />
@@ -388,8 +389,21 @@ export default {
 .product-price-box {
   display: flex;
   align-items: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 4px 12px;
   margin-bottom: 8px;
+}
+.product-price-box .price,
+.product-price-box .price-old {
+  white-space: nowrap;
+}
+/* Mobile: giá bán và giá gốc mỗi giá 1 dòng riêng */
+@media (max-width: 640px) {
+  .product-price-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
 }
 
 .product-price-box .price {
@@ -522,6 +536,7 @@ export default {
 
 .btn-add-to-cart {
   flex: 1;
+  white-space: nowrap; /* chữ "Thêm vào giỏ hàng" không bao giờ tự xuống dòng */
   height: 52px;
   background-color: #6C5D4B; 
   color: white;
@@ -559,6 +574,18 @@ export default {
 }
 .btn-buy-now:hover {
   background-color: rgba(108, 93, 75, 0.05);
+}
+
+/* Mobile: hàng 1 = [số lượng] .......... [♡], hàng 2 = nút "Thêm vào giỏ hàng" full chiều rộng
+   (trước đây cả 3 nằm chung 1 hàng nên nút bị bóp hẹp, chữ tràn thành 3 dòng) */
+@media (max-width: 640px) {
+  .action-group {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .action-group .qty-box { order: 1; }
+  .action-group .qa-btn { order: 2; margin-left: auto; }
+  .action-group .btn-add-to-cart { order: 3; flex: 1 1 100%; }
 }
 
 .qa-btn {
@@ -685,4 +712,10 @@ export default {
   font-weight: 500;
   margin-bottom: 4px;
 }
+.tax-shipping-note .policy-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.tax-shipping-note .policy-link:hover { opacity: .75; }
 </style>

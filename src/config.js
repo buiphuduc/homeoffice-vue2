@@ -18,6 +18,9 @@ export default {
   hotlineTel: process.env.VUE_APP_HOTLINE_TEL || '',
   // Domain thật khi lên production — dùng để tạo canonical link/sitemap
   // (xem src/utils/seo.js, scripts/generate-sitemap.js). Bỏ dấu / cuối.
+  // Email nhận tin nhắn từ form Liên hệ (qua FormSubmit) — hiện là email TEST, đổi ở .env khi chính thức.
+  // Xem hướng dẫn deploy đầy đủ trong file google-apps-script/Code.gs ở gốc repo.
+  contactScriptUrl: process.env.VUE_APP_CONTACT_SCRIPT_URL || '',
   siteUrl: (process.env.VUE_APP_SITE_URL || 'https://htmvn.com').replace(/\/$/, ''),
 
   // Các hằng số hành vi của app — gom vào đây để dễ chỉnh cùng 1 chỗ

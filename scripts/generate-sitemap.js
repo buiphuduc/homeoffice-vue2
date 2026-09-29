@@ -41,7 +41,7 @@ const INSPIRATION_SLUGS = [
 ];
 
 // Giữ đồng bộ tay với slug thật trong src/content/legalPages.js
-const LEGAL_SLUGS = ['doi-tra', 'bao-mat', 'dieu-khoan'];
+const LEGAL_SLUGS = ['doi-tra', 'bao-mat', 'dieu-khoan', 'van-chuyen', 'bao-hanh'];
 
 const STATIC_PATHS = [
   { path: '/', changefreq: 'daily', priority: '1.0' },

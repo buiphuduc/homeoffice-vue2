@@ -3,15 +3,27 @@
     <collapsible-section :title="shipping.title" start-expanded>
       <p>{{ shipping.intro }}</p>
 
-      <div class="policy-image-slot" v-for="(img, i) in shipping.images" :key="'si' + i">
-        <img v-if="img" :src="img" :alt="shipping.title + ' ' + (i + 1)">
-        <div v-else class="policy-image-placeholder">
-          <i class="fa-regular fa-image"></i>
-          <span>Ảnh chính sách vận chuyển #{{ i + 1 }} — dán URL ảnh vào <code>src/content/siteContent.js</code> (mục <code>shippingPolicy.images</code>)</span>
+      <!-- Bảng phí gọn: lấy thẳng từ trang Chính sách vận chuyển (1 nguồn dữ liệu duy nhất,
+           sửa phí ở src/content/legalPages.js thì cả 2 nơi tự đổi theo) -->
+      <div class="fee-block" v-for="(t, i) in shippingTables" :key="'ft' + i">
+        <div class="fee-title">{{ t.heading }}</div>
+        <p class="fee-note" v-if="t.note">{{ t.note }}</p>
+        <div class="fee-table-wrap">
+          <table class="fee-table">
+            <thead>
+              <tr><th v-for="(h, k) in t.table.head" :key="k">{{ h }}</th></tr>
+            </thead>
+            <tbody>
+              <tr v-for="(row, r) in t.table.rows" :key="r">
+                <td v-for="(cell, c) in row" :key="c">{{ cell }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
       <p>{{ shipping.confirmationNote }}</p>
+      <p><router-link :to="{ name: 'legal-page', params: { slug: 'van-chuyen' } }" class="full-policy-link">Xem bảng phí vận chuyển đầy đủ →</router-link></p>
     </collapsible-section>
 
     <collapsible-section :title="warranty.title">
@@ -30,6 +42,7 @@
       </div>
 
       <p>{{ warranty.contactNote }}</p>
+      <p><router-link :to="{ name: 'legal-page', params: { slug: 'bao-hanh' } }" class="full-policy-link">Xem chính sách bảo hành đầy đủ →</router-link></p>
     </collapsible-section>
   </div>
 </template>
@@ -37,6 +50,7 @@
 <script>
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue';
 import siteContent from '@/content/siteContent';
+import legalPages from '@/content/legalPages';
 
 /**
  * Hiển thị "Chính sách vận chuyển" + "Chính sách bảo hành" — nội dung
@@ -54,19 +68,34 @@ export default {
       warranty: siteContent.warrantyPolicy,
     };
   },
+  computed: {
+    // Các bảng phí (xe máy, hàng cồng kềnh) lấy từ trang /chinh-sach/van-chuyen
+    shippingTables() {
+      const page = legalPages.find((p) => p.slug === 'van-chuyen');
+      if (!page) return [];
+      return page.sections
+        .filter((sec) => (sec.blocks || []).some((b) => b.type === 'table'))
+        .map((sec) => ({
+          heading: sec.heading,
+          note: ((sec.blocks.find((b) => b.type === 'p')) || {}).text || '',
+          table: sec.blocks.find((b) => b.type === 'table'),
+        }));
+    },
+  },
 };
 </script>
 
 <style scoped>
-.policy-image-slot{margin:14px 0;}
-.policy-image-slot img{width:100%;border-radius:8px;border:1px solid var(--line);}
-.policy-image-placeholder{
-  display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
-  border:2px dashed var(--line);border-radius:8px;padding:36px 20px;color:var(--ink-soft);background:#fafaf5;
-}
-.policy-image-placeholder i{font-size:32px;color:var(--line);}
-.policy-image-placeholder span{font-size:12.5px;max-width:420px;line-height:1.6;}
-.policy-image-placeholder code{background:#eee;padding:1px 5px;border-radius:4px;font-size:11.5px;}
+.fee-block{margin:14px 0;}
+.fee-title{font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:4px;}
+.fee-note{margin:0 0 8px;font-size:12.5px;line-height:1.6;color:var(--ink-soft);}
+.fee-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;}
+.fee-table{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.5;}
+.fee-table th,.fee-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);}
+.fee-table th{background:var(--primary-light);font-weight:600;color:var(--ink);}
+.fee-table td:first-child{font-weight:600;color:var(--ink);white-space:nowrap;}
+.fee-table tr:last-child td{border-bottom:none;}
+.full-policy-link{color:var(--primary,#715b3e);font-weight:600;text-decoration:underline;text-underline-offset:2px;}
 .warranty-section{margin-bottom:16px;padding-bottom:16px;border-bottom:1px dashed var(--line);}
 .warranty-section:last-of-type{border-bottom:none;}
 ul{padding-left:18px;list-style:disc;}

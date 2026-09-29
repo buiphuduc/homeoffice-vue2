@@ -10,14 +10,16 @@
         <i class="fa-solid" :class="mobileNavOpen ? 'fa-xmark' : 'fa-bars'"></i>
       </button>
 
-      <router-link to="/">
+      <router-link to="/" class="logo-link">
         <img class="logo" src="/images/logo.png"></img>
       </router-link>
 
       <div class="search-box">
         <form @submit.prevent="handleSearch">
           <input
+            ref="searchInput"
             type="text"
+            enterkeyhint="search"
             v-model="searchQuery"
             placeholder="Tìm sản phẩm..."
           >
@@ -88,10 +90,12 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll, { passive: true });
+    window.addEventListener('touchmove', this.handleTouchMove, { passive: true });
     this.handleScroll();
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('touchmove', this.handleTouchMove);
   },
   methods: {
     handleSearch() {
@@ -99,6 +103,15 @@ export default {
       if (!q) return;
       this.mobileNavOpen = false;
       this.$router.push({ name: 'listing', query: { q } });
+    },
+    // Đang gõ tìm kiếm (bàn phím ảo mở) mà vuốt cuộn trang -> tự đóng bàn phím.
+    // Trên iOS, cuộn nhanh khi bàn phím còn mở làm header sticky bị giật vì viewport
+    // đang co giãn; đóng bàn phím lúc bắt đầu cuộn là cách xử lý gọn và quen thuộc nhất.
+    handleTouchMove(e) {
+      const input = this.$refs.searchInput;
+      if (!input || document.activeElement !== input) return;
+      if (e.target && e.target.closest && e.target.closest('.search-box')) return;
+      input.blur();
     },
     handleScroll() {
       this.isScrolled = window.scrollY > 8;

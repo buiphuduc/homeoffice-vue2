@@ -2,7 +2,7 @@
   <div class="container contact-view">
     <div class="contact-hero" v-reveal>
       <h1>Liên hệ</h1>
-      <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn trong việc kiến tạo không gian sống hoàn hảo mang đậm phong cách của bạn.</p>
+      <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn trong việc kiến tạo không gian sống hoàn hảo mang đậm phong cách Bắc Âu.</p>
     </div>
 
     <div class="contact-grid">
@@ -20,6 +20,20 @@
               :class="{ 'cf-err': errors.name }"
             >
             <span class="cf-err-msg" v-if="errors.name">{{ errors.name }}</span>
+          </div>
+
+          <div class="cf-field">
+            <label for="cf-phone">Số điện thoại</label>
+            <input
+              id="cf-phone"
+              v-model.trim="form.phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              placeholder="0912 345 678"
+              :class="{ 'cf-err': errors.phone }"
+            >
+            <span class="cf-err-msg" v-if="errors.phone">{{ errors.phone }}</span>
           </div>
 
           <div class="cf-field">
@@ -46,9 +60,14 @@
             <span class="cf-err-msg" v-if="errors.message">{{ errors.message }}</span>
           </div>
 
-          <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-paper-plane"></i> Gửi tin nhắn
+          <!-- Ô "bẫy" chống bot spam: người thật không thấy nên không điền; bot điền -> bị bỏ qua -->
+          <input v-model="form.website" type="text" name="website" class="cf-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <button type="submit" class="btn btn-primary" :disabled="sending">
+            <i class="fa-solid" :class="sending ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+            {{ sending ? 'Đang gửi...' : 'Gửi tin nhắn' }}
           </button>
+          <p class="cf-hint">Tin nhắn sẽ được gửi trực tiếp tới email của {{ company.legalName }}. Chúng tôi sẽ liên hệ lại qua số điện thoại hoặc email bạn cung cấp.</p>
         </form>
       </div>
 
@@ -106,30 +125,43 @@
 
 <script>
 import siteContent from '@/content/siteContent';
-import orderService from '@/services/orderService';
+import config from '@/config';
 
 /**
  * src/views/ContactView.vue
  * ------------------------------------------------------------------
  * Trang Liên hệ — bố cục 2 cột: form gửi tin nhắn bên trái, bản đồ +
  * thông tin công ty thật bên phải. Thông tin công ty lấy từ
- * `siteContent.companyInfo` (KHÔNG khai báo cứng ở đây) — muốn đổi địa
- * chỉ/email/hotline thì sửa ở src/content/siteContent.js (hotline lấy
- * chung từ .env qua config.js), trang này tự cập nhật theo.
+ * `siteContent.companyInfo` (KHÔNG khai báo cứng ở đây).
  *
- * Dự án không có backend nhận tin nhắn thật, nên "Gửi tin nhắn" sẽ mở
- * sẵn email tới địa chỉ công ty kèm nội dung khách vừa nhập (giống cách
- * trang Thanh toán "gửi đơn" qua Zalo/Messenger) và copy nội dung vào
- * clipboard để phòng khi trình duyệt chặn mailto tự mở.
+ * GỬI FORM: tự dựng backend bằng Google Apps Script (miễn phí, do
+ * chính bạn quản lý, không phụ thuộc dịch vụ ngoài) — xem hướng dẫn
+ * triển khai đầy đủ trong file google-apps-script/Code.gs ở gốc repo.
+ * Sau khi deploy, dán URL Web App vào .env:
+ *   VUE_APP_CONTACT_SCRIPT_URL=https://script.google.com/macros/s/xxx/exec
+ * Trình duyệt POST JSON tới URL đó, Apps Script gửi email vào Gmail
+ * công ty (kèm Reply-To = email khách) và tuỳ chọn ghi log vào Google
+ * Sheet. Email nhận được cấu hình NGAY TRONG Code.gs (biến TO_EMAIL,
+ * đang để email test) — sửa ở đó khi test xong, không phải sửa web.
+ *
+ * LƯU Ý QUAN TRỌNG VỀ CORS: Google Apps Script Web App không tự thêm
+ * header CORS cho request có Content-Type: application/json — vì vậy
+ * request gửi đi với Content-Type: text/plain (giữ nguyên body JSON)
+ * để trở thành "simple request", trình duyệt không gửi preflight
+ * OPTIONS (Apps Script không xử lý OPTIONS) và Google vẫn cho đọc
+ * response bình thường. Đừng đổi lại thành application/json.
  * ------------------------------------------------------------------
  */
+const PHONE_REGEX = /^(0|\+84)\d{9,10}$/;
+
 export default {
   name: 'ContactView',
   data() {
     return {
       company: siteContent.companyInfo,
-      form: { name: '', email: '', message: '' },
+      form: { name: '', phone: '', email: '', message: '', website: '' },
       errors: {},
+      sending: false,
     };
   },
   computed: {
@@ -141,6 +173,12 @@ export default {
     validate() {
       const e = {};
       if (!this.form.name) e.name = 'Vui lòng nhập tên của bạn';
+      const phone = this.form.phone.replace(/[\s.-]/g, '');
+      if (!phone) {
+        e.phone = 'Vui lòng nhập số điện thoại';
+      } else if (!PHONE_REGEX.test(phone)) {
+        e.phone = 'Số điện thoại không hợp lệ (vd 0912345678)';
+      }
       if (!this.form.email) {
         e.email = 'Vui lòng nhập email';
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email)) {
@@ -151,32 +189,64 @@ export default {
       return Object.keys(e).length === 0;
     },
     async handleSubmit() {
+      if (this.sending) return;
       if (!this.validate()) {
         this.$store.dispatch('toast/push', { title: 'Vui lòng kiểm tra lại thông tin', type: 'err' });
         return;
       }
+      // Bot điền ô bẫy -> giả vờ thành công, không gửi gì cả
+      if (this.form.website) {
+        this.resetForm();
+        return;
+      }
 
-      const text = [
-        `TIN NHẮN LIÊN HỆ - ${this.company.legalName}`,
-        '------------------------------',
-        `Tên: ${this.form.name}`,
-        `Email: ${this.form.email}`,
-        '',
-        this.form.message,
-      ].join('\n');
+      if (!config.contactScriptUrl) {
+        this.$store.dispatch('toast/push', {
+          title: 'Form Liên hệ chưa được cấu hình',
+          desc: 'Thiếu VUE_APP_CONTACT_SCRIPT_URL trong .env — xem hướng dẫn trong google-apps-script/Code.gs.',
+          type: 'err',
+        });
+        return;
+      }
 
-      await orderService.copyToClipboard(text);
+      this.sending = true;
+      try {
+        // Content-Type text/plain (không phải application/json) là CỐ Ý —
+        // xem ghi chú CORS ở đầu file. Apps Script vẫn tự parse được JSON
+        // từ e.postData.contents phía server.
+        const res = await fetch(config.contactScriptUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            name: this.form.name,
+            phone: this.form.phone,
+            email: this.form.email,
+            message: this.form.message,
+            website: this.form.website, // ô bẫy chống bot, kiểm tra lại ở server
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.success === false) {
+          throw new Error(data.message || `HTTP ${res.status}`);
+        }
 
-      const subject = encodeURIComponent(`Liên hệ từ website - ${this.form.name}`);
-      const body = encodeURIComponent(text);
-      window.location.href = `mailto:${this.company.email}?subject=${subject}&body=${body}`;
-
-      this.$store.dispatch('toast/push', {
-        title: 'Đã mở ứng dụng email của bạn',
-        desc: 'Nội dung tin nhắn đã được điền sẵn, chỉ cần bấm gửi. (Đã sao chép sẵn vào clipboard phòng khi cần dán tay.)',
-      });
-
-      this.form = { name: '', email: '', message: '' };
+        this.$store.dispatch('toast/push', {
+          title: 'Đã gửi tin nhắn thành công',
+          desc: 'Cảm ơn bạn! Chúng tôi sẽ liên hệ lại trong thời gian sớm nhất.',
+        });
+        this.resetForm();
+      } catch (err) {
+        this.$store.dispatch('toast/push', {
+          title: 'Gửi tin nhắn chưa thành công',
+          desc: `Vui lòng thử lại hoặc gọi hotline ${this.company.phoneDisplay}.`,
+          type: 'err',
+        });
+      } finally {
+        this.sending = false;
+      }
+    },
+    resetForm() {
+      this.form = { name: '', phone: '', email: '', message: '', website: '' };
       this.errors = {};
     },
   },
@@ -218,6 +288,8 @@ export default {
 .cf-field textarea.cf-err{ border-color:#c0392b; }
 .cf-err-msg{ display:block; margin-top:6px; font-size:11.5px; color:#c0392b; }
 .contact-form-card .btn{ margin-top:4px; }
+.cf-honey{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none; }
+.cf-hint{ margin:10px 0 0; font-size:11.5px; line-height:1.6; color:var(--ink-soft); }
 
 /* ---------- Bản đồ + thông tin ---------- */
 .contact-side{ display:flex; flex-direction:column; gap:16px; }

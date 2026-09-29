@@ -98,10 +98,6 @@ export default {
   shippingPolicy: {
     title: 'Chính sách vận chuyển',
     intro: 'Áp dụng cho đơn hàng giao trong nội thành và các khu vực lân cận. Phí có thể thay đổi theo kích thước/khối lượng thực tế của sản phẩm.',
-    images: [
-      '', // Ảnh 1: bảng giá giao xe máy / hàng cồng kềnh theo khu vực
-      '', // Ảnh 2: bảng phí vận chuyển & lắp ráp chi tiết
-    ],
     confirmationNote: 'Đơn hàng đặt trong giờ hành chính sẽ được gọi điện xác nhận trong vòng 30-60 phút. Đơn đặt ngoài giờ hoặc ngày nghỉ sẽ được xử lý vào ngày làm việc kế tiếp.',
   },
 
@@ -191,7 +187,7 @@ export default {
       title: 'Hỗ trợ khách hàng',
       items: [
         { text: `Hotline: ${config.hotlineDisplay}` },
-        { text: 'Liên hệ qua Zalo/Messenger ở nút góc phải màn hình' },
+        { text: 'Liên hệ qua Zalo/Messenger' },
       ],
     },
     {
@@ -209,8 +205,8 @@ export default {
       items: [
         { text: 'Câu hỏi thường gặp' },
         { text: 'Hướng dẫn đặt hàng' },
-        { text: 'Chính sách vận chuyển' },
-        { text: 'Chính sách bảo hành' },
+        { text: 'Chính sách vận chuyển', link: '/chinh-sach/van-chuyen' },
+        { text: 'Chính sách bảo hành', link: '/chinh-sach/bao-hanh' },
         { text: 'Chính sách đổi trả', link: '/chinh-sach/doi-tra' },
         { text: 'Chính sách bảo mật', link: '/chinh-sach/bao-mat' },
         { text: 'Điều khoản sử dụng', link: '/chinh-sach/dieu-khoan' },

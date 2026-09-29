@@ -447,7 +447,9 @@ export default {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
-  grid-auto-rows: 300px;
+  /* minmax(...,auto): hàng cao tối thiểu 300px nhưng TỰ GIÃN theo nội dung
+     (trước đây cố định 300px nên khung chữ dài bị tràn ra ngoài trên mobile) */
+  grid-auto-rows: minmax(300px, auto);
 }
 @media (min-width: 768px) {
   .bento-grid {
@@ -481,8 +483,13 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 48px;
+  padding: 24px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+}
+@media (min-width: 768px) {
+  .bento-overlay {
+    padding: 48px;
+  }
 }
 .bento-overlay-small {
   position: absolute;
@@ -506,10 +513,15 @@ export default {
 .bento-text-card {
   background-color: var(--secondary-fixed);
   border-radius: 8px;
-  padding: 48px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+@media (min-width: 768px) {
+  .bento-text-card {
+    padding: 48px;
+  }
 }
 .bento-text-title {
   font-family: var(--font-heading);
