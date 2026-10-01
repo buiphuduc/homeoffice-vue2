@@ -30,17 +30,13 @@
       <div class="hc hc-time" :class="{ active: isOn('time'), was: prev === 'time' }"
         :aria-hidden="String(active !== 'time')" :inert="active !== 'time'">
         <div class="hf-bg" :style="bg(imgs.time)"></div>
-        <div class="hf-light" v-for="(l, i) in lights" :key="i" :style="l"></div>
+        <hero-time-controls @label-change="timeLabel = $event"></hero-time-controls>
         <div class="hf-text">
           <component :is="titleTag('time')" class="hf-title">Phòng ngủ<br>bình yên từng giờ</component>
           <p><transition name="hf-swap" mode="out-in"><span class="hf-sw" :key="timeLabel">{{ timeLabel }}</span></transition></p>
           <router-link :to="heroLink(links.time)" class="hf-cta">Xem nội thất phòng ngủ <i class="fa-solid fa-arrow-right"></i></router-link>
         </div>
-        <div class="hf-panel hf-time">
-          <p>Điều chỉnh thời gian trong ngày</p>
-          <input type="range" min="0" max="100" v-model.number="time" aria-label="Thời gian trong ngày">
-          <div class="hf-time-marks"><span>Sáng</span><span>Chiều</span><span>Tối</span></div>
-        </div>
+
       </div>
 
       <!-- CONCEPT 3: ĐA VŨ TRỤ (chuyển phong cách) -->
@@ -182,6 +178,71 @@ import config from '@/config';
 import siteContent from '@/content/siteContent';
 import { getChildCategories, getFeaturedSubcategories, productMatchesCategoryPath } from '@/utils/category';
 
+// Keep frame-by-frame updates inside this small component, away from product lists.
+const HeroTimeControls = {
+  name: 'HeroTimeControls',
+  data() {
+    return { time: 0 };
+  },
+  created() {
+    this.pendingTime = 0;
+    this.frame = null;
+    this.lastLabel = 'Bình minh trong trẻo';
+  },
+  beforeDestroy() {
+    if (this.frame !== null) cancelAnimationFrame(this.frame);
+  },
+  methods: {
+    onInput(event) {
+      const value = Number(event.target.value);
+      if (!Number.isFinite(value)) return;
+      this.pendingTime = Math.max(0, Math.min(100, value));
+      // Coalesce rapid input events; the latest position wins on the next frame.
+      if (this.frame !== null) return;
+      this.frame = requestAnimationFrame(() => {
+        this.frame = null;
+        this.time = this.pendingTime;
+        const label = this.time < 33 ? 'Bình minh trong trẻo'
+          : this.time < 66 ? 'Hoàng hôn ấm áp' : 'Đêm tịnh thư thái';
+        if (label !== this.lastLabel) {
+          this.lastLabel = label;
+          this.$emit('label-change', label);
+        }
+      });
+    },
+  },
+  render(h) {
+    const t = this.time / 100;
+    const ss = (a, b, x) => {
+      const k = Math.min(1, Math.max(0, (x - a) / (b - a)));
+      return k * k * (3 - 2 * k);
+    };
+    const lights = [
+      { background: '#fff', opacity: 0.1 + 0.33 * ss(0, 0.33, t) * (1 - ss(0.33, 0.62, t)), mixBlendMode: 'overlay' },
+      { background: 'rgb(255,140,0)', opacity: 0.5 * ss(0.22, 0.5, t) * (1 - ss(0.62, 0.86, t)), mixBlendMode: 'color' },
+      { background: 'rgb(10,20,50)', opacity: 0.9 * ss(0.5, 0.92, t), mixBlendMode: 'multiply' },
+    ];
+    // No stacking context here: lights stay below hero text, controls stay above it.
+    return h('div', { style: { position: 'absolute', inset: '0', pointerEvents: 'none' } }, [
+      ...lights.map((style, i) => h('div', { key: i, class: 'hf-light', style })),
+      h('div', {
+        class: 'hf-panel hf-time',
+        // Avoid re-blurring the changing full-screen lighting behind the slider.
+        style: { pointerEvents: 'auto', backdropFilter: 'none', WebkitBackdropFilter: 'none' },
+      }, [
+        h('p', 'Điều chỉnh thời gian trong ngày'),
+        h('input', {
+          attrs: { type: 'range', min: '0', max: '100', step: '0.1', 'aria-label': 'Thời gian trong ngày' },
+          domProps: { value: this.time },
+          style: { touchAction: 'none' },
+          on: { input: this.onInput, change: this.onInput },
+        }),
+        h('div', { class: 'hf-time-marks' }, ['Sáng', 'Chiều', 'Tối'].map(label => h('span', label))),
+      ]),
+    ]);
+  },
+};
+
 /**
  * Trang chủ — cấu trúc các khối được dựng để khớp với bố cục thật của
  * site tham khảo: hero 2 khối, danh mục nổi bật có ảnh, dải banner
@@ -192,7 +253,7 @@ import { getChildCategories, getFeaturedSubcategories, productMatchesCategoryPat
  */
 export default {
   name: 'HomeView',
-  components: { ProductGrid, QuickViewModal },
+  components: { ProductGrid, QuickViewModal, HeroTimeControls },
   mixins: [productActionsMixin],
   data() {
     return {
@@ -208,8 +269,7 @@ export default {
       requested: 'sketch', // tab người dùng vừa bấm (nút tab sáng ngay); nội dung chuyển theo sau, lần lượt
       prev: null, // tab cũ, giữ nguyên bên dưới cho đến khi tab mới hiện đủ
       busy: false,
-      time: 0, // giá trị đích của thanh trượt
-      shown: 0, // giá trị đang hiển thị (đuổi theo `time` mượt mà)
+      timeLabel: 'Bình minh trong trẻo',
       theme: 'modern',
       themeReq: 'modern',
       prevTheme: null,
@@ -246,30 +306,9 @@ export default {
     currentTheme() {
       return this.themes.find((t) => t.id === this.theme);
     },
-    timeLabel() {
-      if (this.time < 33) return 'Bình minh trong trẻo';
-      if (this.time < 66) return 'Hoàng hôn ấm áp';
-      return 'Đêm tịnh thư thái';
-    },
     navIndex() {
       return this.concepts.findIndex((c) => c.id === this.requested);
     },
-    // Ánh sáng liên tục theo giờ: 3 lớp cố định chế độ trộn, chỉ đổi độ đậm -> không còn giật ở mốc 33/66
-    lights() {
-      const t = this.shown / 100;
-      const ss = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
-      const bright = 0.1 + 0.33 * ss(0, 0.33, t) * (1 - ss(0.33, 0.62, t));
-      const warm = 0.5 * ss(0.22, 0.5, t) * (1 - ss(0.62, 0.86, t));
-      const night = 0.9 * ss(0.5, 0.92, t);
-      return [
-        { background: '#fff', opacity: bright, mixBlendMode: 'overlay' },
-        { background: 'rgb(255,140,0)', opacity: warm, mixBlendMode: 'color' },
-        { background: 'rgb(10,20,50)', opacity: night, mixBlendMode: 'multiply' },
-      ];
-    },
-  },
-  watch: {
-    time(v) { this.animateTo(v); },
   },
   mounted() {
     this.measureOffset();
@@ -286,7 +325,6 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.measureOffset);
     window.removeEventListener('scroll', this.onScroll);
-    cancelAnimationFrame(this.raf);
     clearTimeout(this.busyTimer);
     clearTimeout(this.themeTimer);
   },
@@ -382,19 +420,6 @@ export default {
         img.src = url;
         if (timeout) setTimeout(resolve, timeout);
       });
-    },
-    // Đuổi dần `shown` về `time` với easing để ánh sáng đổi mượt kể cả khi bấm nhảy cóc
-    animateTo(target) {
-      cancelAnimationFrame(this.raf);
-      const from = this.shown;
-      const start = performance.now();
-      const dur = Math.min(900, 250 + Math.abs(target - from) * 10);
-      const step = (now) => {
-        const k = Math.min(1, (now - start) / dur);
-        this.shown = from + (target - from) * (1 - Math.pow(1 - k, 3));
-        if (k < 1) this.raf = requestAnimationFrame(step);
-      };
-      this.raf = requestAnimationFrame(step);
     },
     bg(url) {
       return { backgroundImage: 'url(' + url + ')' };

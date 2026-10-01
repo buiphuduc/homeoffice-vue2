@@ -1,5 +1,5 @@
 <template>
-  <div class="fab-col">
+  <div class="fab-col" :style="viewportStyle">
     <a
       v-if="config.zaloPhone"
       class="fab fab-zalo"
@@ -54,15 +54,40 @@ export default {
     return {
       config,
       showScrollTop: false,
+      viewportStyle: {},
     };
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll);
+    this.handleScroll();
+    this.updateViewport();
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
+    window.addEventListener('resize', this.updateViewport);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', this.updateViewport);
+      window.visualViewport.addEventListener('scroll', this.updateViewport);
+    }
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('resize', this.updateViewport);
+    if (window.visualViewport) {
+      window.visualViewport.removeEventListener('resize', this.updateViewport);
+      window.visualViewport.removeEventListener('scroll', this.updateViewport);
+    }
   },
   methods: {
+    updateViewport() {
+      const viewport = window.visualViewport;
+      // Keep controls above browser chrome/the keyboard; preserve native pinch zoom.
+      if (!viewport || viewport.scale !== 1) {
+        this.viewportStyle = {};
+        return;
+      }
+      this.viewportStyle = {
+        '--fab-viewport-bottom': Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop) + 'px',
+        '--fab-viewport-height': viewport.height + 'px',
+      };
+    },
     handleScroll() {
       this.showScrollTop = window.scrollY > 400;
     },
