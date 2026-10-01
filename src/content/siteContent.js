@@ -16,6 +16,60 @@ import config from '@/config';
 
 export default {
   /**
+   * HERO FULL MÀN HÌNH (3 tab). Đổi ảnh / đường dẫn danh mục tại đây.
+   *  Tab 1 "Phòng khách"  : sketch  (ảnh hiện dạng phác thảo trắng đen rồi mở sang ảnh thật)
+   *  Tab 2 "Phòng ngủ"    : time    (kéo thanh trượt đổi ánh sáng sáng/chiều/tối)
+   *  Tab 3 "Không gian"   : 3 nút gạt, mỗi nút một ảnh:
+   *      modern  -> Phòng bếp
+   *      classic -> Phòng ăn
+   *      wabi    -> Phòng làm việc
+   *  (tên khoá modern/classic/wabi chỉ là mã nội bộ, không ảnh hưởng nội dung hiển thị;
+   *   tên hiển thị nằm trong mảng `themes` ở src/views/HomeView.vue)
+   *
+   * links: sản phẩm mà nút "Xem nội thất ..." của từng ảnh sẽ lọc ra (khớp cây danh mục trong Google Sheet,
+   *   cột Categories, viết đúng chính tả/hoa thường như trong Sheet).
+   *   paths : danh sách đường dẫn danh mục, ví dụ [['Phòng Khách']] hoặc [['Bếp & Phòng Ăn', 'Bàn Ăn']].
+   *           Có thể liệt kê NHIỀU đường dẫn để gộp sản phẩm của nhiều danh mục con.
+   *           [] = trang "Tất cả sản phẩm".
+   *   label : tiêu đề trang danh sách khi gộp nhiều danh mục (không bắt buộc với 1 danh mục).
+   */
+  heroShowcase: {
+    images: {
+      sketch: '/images/banners/livingroom_1.webp',
+      time: '/images/banners/bedroom.webp',
+      modern: '/images/banners/kitchenroom.webp',
+      classic: '/images/banners/livingroom_2.webp',
+      wabi: '/images/banners/workingroom.webp',
+    },
+    links: {
+      // Tab 1 - Phòng khách
+      sketch: { paths: [['Phòng Khách']] },
+      // Tab 2 - Phòng ngủ
+      time: { paths: [['Phòng Ngủ']] },
+      // Tab 3 - Phòng bếp (tủ bếp, tủ kệ bếp, phụ kiện bếp)
+      modern: {
+        label: 'Phòng bếp',
+        paths: [
+          ['Bếp & Phòng Ăn', 'Tủ Bếp'],
+          ['Bếp & Phòng Ăn', 'Tủ Bếp Mini'],
+          ['Bếp & Phòng Ăn', 'Tủ Kệ Nhà Bếp'],
+          ['Bếp & Phòng Ăn', 'Phụ Kiện Bếp'],
+        ],
+      },
+      // Tab 3 - Phòng ăn (bàn ăn, bộ bàn ghế ăn)
+      classic: {
+        label: 'Phòng ăn',
+        paths: [
+          ['Bếp & Phòng Ăn', 'Bàn Ăn'],
+          ['Bếp & Phòng Ăn', 'Bộ Bàn Ghế Ăn'],
+        ],
+      },
+      // Tab 3 - Phòng làm việc (bàn, ghế công thái học, kệ sách, tủ cá nhân...)
+      wabi: { paths: [['Phòng Làm Việc']] },
+    },
+  },
+
+  /**
    * Banner lớn bên trái trang chủ (giống khối "GHẾ VĂN PHÒNG" ở site gốc).
    * image: để trống ('') nếu chưa có ảnh -> sẽ hiển thị nền màu trơn thay thế.
    */
