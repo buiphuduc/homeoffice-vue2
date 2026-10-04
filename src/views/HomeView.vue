@@ -43,11 +43,11 @@
       <div class="hc hc-multi" :class="{ active: isOn('multiverse'), was: prev === 'multiverse' }"
         :aria-hidden="String(active !== 'multiverse')" :inert="active !== 'multiverse'">
         <div v-for="t in themes" :key="t.id" class="hf-bg hf-bg-theme" :class="['th-' + t.id, { on: theme === t.id, was: prevTheme === t.id }]"
-          :style="bg(imgs[t.id])"></div>
+          :style="bg(t.image)"></div>
         <div class="hf-text">
           <component :is="titleTag('multiverse')" class="hf-title"><transition name="hf-swap" mode="out-in"><span class="hf-sw" :key="theme">{{ currentTheme.title }}</span></transition></component>
           <p><transition name="hf-swap" mode="out-in"><span class="hf-sw" :key="theme">{{ currentTheme.sub }}</span></transition></p>
-          <router-link :to="heroLink(links[theme])" class="hf-cta"><transition name="hf-swap" mode="out-in"><span class="hf-sw" :key="theme">{{ currentTheme.cta }}</span></transition> <i class="fa-solid fa-arrow-right"></i></router-link>
+          <router-link :to="heroLink(currentTheme)" class="hf-cta"><transition name="hf-swap" mode="out-in"><span class="hf-sw" :key="theme">{{ currentTheme.cta }}</span></transition> <i class="fa-solid fa-arrow-right"></i></router-link>
         </div>
         <div class="hf-panel hf-switch" role="radiogroup" aria-label="Chọn không gian">
           <button v-for="t in themes" :key="t.id" role="radio" :aria-checked="themeReq === t.id"
@@ -279,12 +279,7 @@ export default {
         { id: 'time', label: 'Phòng ngủ' },
         { id: 'multiverse', label: 'Không gian' },
       ],
-      // Tab 3: mỗi mục ứng với 1 ảnh trong siteContent.heroShowcase.images (theo khoá id)
-      themes: [
-        { id: 'modern', name: 'Phòng bếp', title: 'Phòng bếp\ngỗ sồi ấm áp', sub: 'Tủ bếp kem, mặt đá đen, ánh đèn vàng dịu', cta: 'Xem nội thất phòng bếp' },
-        { id: 'classic', name: 'Phòng ăn', title: 'Phòng ăn\ntràn ngập ánh nắng', sub: 'Bàn tròn gỗ, ghế bọc bouclé, đảo bếp đá cẩm thạch', cta: 'Xem nội thất phòng ăn' },
-        { id: 'wabi', name: 'Phòng làm việc', title: 'Góc làm việc\ntại nhà đầy cảm hứng', sub: 'Bàn gỗ sồi, kệ sách trắng, ánh sáng tự nhiên', cta: 'Xem nội thất làm việc' },
-      ],
+
     };
   },
   computed: {
@@ -296,6 +291,9 @@ export default {
     },
     featuredSubcategories() {
       return getFeaturedSubcategories(this.all, 14);
+    },
+    themes() {
+      return this.content.heroShowcase.themes;
     },
     imgs() {
       return this.content.heroShowcase.images;
@@ -316,7 +314,7 @@ export default {
     window.addEventListener('scroll', this.onScroll, { passive: true });
     this.onScroll();
     // Tải trước toàn bộ ảnh; chờ ảnh đầu tiên xong (tối đa 3s) rồi mới bắt đầu hiệu ứng mở đầu
-    const urls = Object.values(this.imgs);
+    const urls = [...Object.values(this.imgs), ...this.themes.map((theme) => theme.image)];
     urls.forEach((u) => this.loadImage(u));
     this.loadImage(this.imgs.sketch, 3000).then(() => {
       requestAnimationFrame(() => requestAnimationFrame(() => { this.booted = true; this.sketchRun = this.active === 'sketch'; }));
@@ -429,15 +427,9 @@ export default {
       const el = this.$refs.hero;
       if (el) this.offset = Math.round(el.getBoundingClientRect().top + window.pageYOffset);
     },
-    // Link cho nút ở hero: 1 danh mục -> như categoryLink; nhiều danh mục -> gộp bằng | + tiêu đề (label)
+    // Cùng định dạng đường dẫn với bộ lọc của ListingView.
     heroLink(link) {
-      const paths = (link && link.paths) || [];
-      if (!paths.length) return '/danh-muc';
-      if (paths.length === 1) return this.categoryLink(paths[0]);
-      return {
-        name: 'listing',
-        query: { cat: paths.map((p) => p.join('/')).join('|'), label: link.label || '' },
-      };
+      return this.categoryLink(link && link.path);
     },
     categoryLink(path) {
       if (!path || !path.length) return '/danh-muc';

@@ -16,57 +16,52 @@ import config from '@/config';
 
 export default {
   /**
-   * HERO FULL MÀN HÌNH (3 tab). Đổi ảnh / đường dẫn danh mục tại đây.
-   *  Tab 1 "Phòng khách"  : sketch  (ảnh hiện dạng phác thảo trắng đen rồi mở sang ảnh thật)
-   *  Tab 2 "Phòng ngủ"    : time    (kéo thanh trượt đổi ánh sáng sáng/chiều/tối)
-   *  Tab 3 "Không gian"   : 3 nút gạt, mỗi nút một ảnh:
-   *      modern  -> Phòng bếp
-   *      classic -> Phòng ăn
-   *      wabi    -> Phòng làm việc
-   *  (tên khoá modern/classic/wabi chỉ là mã nội bộ, không ảnh hưởng nội dung hiển thị;
-   *   tên hiển thị nằm trong mảng `themes` ở src/views/HomeView.vue)
-   *
-   * links: sản phẩm mà nút "Xem nội thất ..." của từng ảnh sẽ lọc ra (khớp cây danh mục trong Google Sheet,
-   *   cột Categories, viết đúng chính tả/hoa thường như trong Sheet).
-   *   paths : danh sách đường dẫn danh mục, ví dụ [['Phòng Khách']] hoặc [['Bếp & Phòng Ăn', 'Bàn Ăn']].
-   *           Có thể liệt kê NHIỀU đường dẫn để gộp sản phẩm của nhiều danh mục con.
-   *           [] = trang "Tất cả sản phẩm".
-   *   label : tiêu đề trang danh sách khi gộp nhiều danh mục (không bắt buộc với 1 danh mục).
+   * Hero: tab Phòng khách, Phòng ngủ và ba không gian bên dưới.
+   * Đổi không gian chỉ cần sửa một phần tử trong themes:
+   *   name/title/sub/cta: nội dung hiển thị; image: ảnh nền;
+   *   path: đường dẫn danh mục đúng với cột Categories trong Sheet/CSV.
+   * Ví dụ ['Bếp & Phòng Ăn'] lấy cả danh mục và mọi danh mục con;
+   * ['Bếp & Phòng Ăn', 'Bàn Ăn'] chỉ lấy bàn ăn; [] lấy tất cả sản phẩm.
+   * Giữ id modern/classic/wabi để giữ hiệu ứng chuyển ảnh hiện có.
    */
   heroShowcase: {
     images: {
       sketch: '/images/banners/livingroom_1.webp',
       time: '/images/banners/bedroom.webp',
-      modern: '/images/banners/kitchenroom.webp',
-      classic: '/images/banners/livingroom_2.webp',
-      wabi: '/images/banners/workingroom.webp',
     },
     links: {
-      // Tab 1 - Phòng khách
-      sketch: { paths: [['Phòng Khách']] },
-      // Tab 2 - Phòng ngủ
-      time: { paths: [['Phòng Ngủ']] },
-      // Tab 3 - Phòng bếp (tủ bếp, tủ kệ bếp, phụ kiện bếp)
-      modern: {
-        label: 'Phòng bếp',
-        paths: [
-          ['Bếp & Phòng Ăn', 'Tủ Bếp'],
-          ['Bếp & Phòng Ăn', 'Tủ Bếp Mini'],
-          ['Bếp & Phòng Ăn', 'Tủ Kệ Nhà Bếp'],
-          ['Bếp & Phòng Ăn', 'Phụ Kiện Bếp'],
-        ],
-      },
-      // Tab 3 - Phòng ăn (bàn ăn, bộ bàn ghế ăn)
-      classic: {
-        label: 'Phòng ăn',
-        paths: [
-          ['Bếp & Phòng Ăn', 'Bàn Ăn'],
-          ['Bếp & Phòng Ăn', 'Bộ Bàn Ghế Ăn'],
-        ],
-      },
-      // Tab 3 - Phòng làm việc (bàn, ghế công thái học, kệ sách, tủ cá nhân...)
-      wabi: { paths: [['Phòng Làm Việc']] },
+      sketch: { path: ['Phòng Khách'] },
+      time: { path: ['Phòng Ngủ'] },
     },
+    themes: [
+      {
+        id: 'modern',
+        name: 'Bếp & phòng ăn',
+        title: 'Bếp & phòng ăn\nấm áp, sum vầy',
+        sub: 'Nội thất bếp và bàn ăn cho những khoảnh khắc quây quần',
+        cta: 'Xem nội thất bếp & phòng ăn',
+        image: '/images/banners/kitchenroom.webp',
+        path: ['Bếp & Phòng Ăn'],
+      },
+      {
+        id: 'classic',
+        name: 'Phòng tắm',
+        title: 'Phòng tắm\ngọn gàng, tiện nghi',
+        sub: 'Sắp xếp không gian ngăn nắp với nội thất phòng tắm',
+        cta: 'Xem nội thất phòng tắm',
+        image: '/images/banners/bathroom.webp',
+        path: ['Phòng Tắm'],
+      },
+      {
+        id: 'wabi',
+        name: 'Phòng làm việc',
+        title: 'Góc làm việc\ntại nhà đầy cảm hứng',
+        sub: 'Bàn gỗ sồi, kệ sách trắng, ánh sáng tự nhiên',
+        cta: 'Xem nội thất làm việc',
+        image: '/images/banners/workingroom.webp',
+        path: ['Phòng Làm Việc'],
+      },
+    ],
   },
 
   /**
@@ -128,16 +123,16 @@ export default {
    * icon tròn đơn giản (không lỗi, không cần khai báo đủ hết).
    */
   categoryBanners: {
-    'Nội thất văn phòng': '/images/banners/noi-that-van-phong.jpg',
-    'Phòng Khách': '/images/banners/phong-khach.jpg',
-    'Bếp & Phòng Ăn': '/images/banners/bep-phong-an.jpg',
-    'Phòng Ngủ': '/images/banners/phong-ngu.jpg',
-    'Phòng Làm Việc': '/images/banners/phong-lam-viec.jpg',
-    'Bàn ghế Cafe - Ngoài trời': '/images/banners/ban-ghe-cafe.jpg',
-    'Phụ Kiện': '/images/banners/phu-kien.jpg',
-    'Ống Nước': '/images/banners/ong-nuoc.jpg',
-    'Trường Học': '/images/banners/truong-hoc.jpg',
-    'Phòng Tắm': '/images/banners/phong-tam.jpg',
+    'Nội thất văn phòng': '/images/banners/noi-that-van-phong.webp',
+    'Phòng Khách': '/images/banners/phong-khach.webp',
+    'Bếp & Phòng Ăn': '/images/banners/bep-phong-an.webp',
+    'Phòng Ngủ': '/images/banners/phong-ngu.webp',
+    'Phòng Làm Việc': '/images/banners/phong-lam-viec.webp',
+    'Bàn ghế Cafe - Ngoài trời': '/images/banners/ban-ghe-cafe.webp',
+    'Phụ Kiện': '/images/banners/phu-kien.webp',
+    'Ống Nước': '/images/banners/ong-nuoc.webp',
+    'Trường Học': '/images/banners/truong-hoc.webp',
+    'Phòng Tắm': '/images/banners/phong-tam.webp',
   },
 
   /**

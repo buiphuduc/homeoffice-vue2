@@ -2,28 +2,36 @@
   <div class="introduce-view">
     <main>
       <!-- Hero Section -->
-      <section class="container hero-section">
+      <section ref="hero" class="hero-section" aria-labelledby="intro-hero-title"
+        :style="heroStyle">
         <div class="hero-card group">
           <img
             v-show="!heroBroken"
             alt="Xưởng sản xuất nội thất HTMVN — không gian chế tác gỗ theo phong cách Bắc Âu tối giản"
             class="hero-img"
-            src="/images/gioi-thieu/hero-xuong-che-tac.jpg"
+            fetchpriority="high"
+            src="/images/gioi-thieu/hero-gioi-thieu.webp"
             @error="heroBroken = true"
           />
           <div class="img-fallback" v-if="heroBroken">
             <span class="material-symbols-outlined">photo_camera</span>
           </div>
-          <div class="hero-overlay"></div>
+          <div class="hero-overlay" aria-hidden="true"></div>
+          <div class="hero-content">
+            <p class="hero-eyebrow">{{ shopName }} · Câu chuyện thương hiệu</p>
+            <h1 id="intro-hero-title" class="hero-title">Tinh tế trong thiết kế.<br>Ấm áp trong từng không gian.</h1>
+            <p class="hero-description">Từ sự tỉ mỉ trong từng chi tiết đến tính tiện dụng mỗi ngày, HTM mang tinh thần tối giản và ấm áp vào không gian sống của bạn.</p>
+            <router-link class="hero-cta" to="/danh-muc">Khám phá nội thất <span aria-hidden="true">→</span></router-link>
+          </div>
         </div>
       </section>
 
       <!-- Quote Section -->
       <section class="container quote-section">
         <div class="quote-content">
-          <h1 class="display-text text-primary">
+          <h2 class="display-text text-primary">
             "Thiết kế đẹp bắt đầu từ sự chính xác — nơi kỹ thuật gặp gỡ cảm xúc, và từng thớ gỗ được kể lại bằng một ngôn ngữ tối giản, ấm áp."
-          </h1>
+          </h2>
           <p class="body-text text-variant mt-lg">
             {{ shopName }} là thương hiệu nội thất trực thuộc {{ company.legalName }} — nơi tư duy kỹ thuật chính xác của một đơn vị gia công, lắp đặt lâu năm hội tụ cùng gu thẩm mỹ Bắc Âu tối giản. Chúng tôi tin rằng nội thất không chỉ để lấp đầy không gian, mà để tạo ra một chốn về mang đậm tinh thần Hygge: tĩnh lặng, đúng công năng và bền theo thời gian trong mọi tác phẩm, từ phòng khách, phòng ngủ đến không gian làm việc.
           </p>
@@ -173,9 +181,82 @@ export default {
       shopName: config.shopName,
       company: siteContent.companyInfo,
       heroBroken: false,
+      heroOffset: 130,
+      viewportWidth: null,
       bentoBroken: { large: false, artisan: false, detail: false },
     };
   },
+  computed: {
+    heroStyle() {
+      return {
+        '--intro-offset': this.heroOffset + 'px',
+        '--intro-width': this.viewportWidth ? this.viewportWidth + 'px' : '100%',
+      };
+    },
+  },
+  mounted() {
+  this.heroMeasureFrame = null;
+  this.heroDisposed = false;
+  this.scheduleHeroMeasure();
+
+  window.addEventListener('resize', this.scheduleHeroMeasure, {
+    passive: true,
+  });
+
+  if (typeof ResizeObserver !== 'undefined') {
+    this.layoutObserver = new ResizeObserver(
+      this.scheduleHeroMeasure
+    );
+
+    const header = document.querySelector('.site-header');
+    if (header) this.layoutObserver.observe(header);
+  }
+},
+
+beforeDestroy() {
+  this.heroDisposed = true;
+
+  window.removeEventListener('resize', this.scheduleHeroMeasure);
+
+  if (this.layoutObserver) {
+    this.layoutObserver.disconnect();
+  }
+
+  if (this.heroMeasureFrame !== null) {
+    cancelAnimationFrame(this.heroMeasureFrame);
+    this.heroMeasureFrame = null;
+  }
+},
+
+methods: {
+  scheduleHeroMeasure() {
+    if (this.heroDisposed || this.heroMeasureFrame !== null) return;
+
+    this.heroMeasureFrame = requestAnimationFrame(() => {
+      this.heroMeasureFrame = null;
+      if (!this.heroDisposed) this.measureHero();
+    });
+  },
+
+  measureHero() {
+    const hero = this.$refs.hero;
+    if (!hero) return;
+
+    const width = document.documentElement.clientWidth;
+    const offset = Math.max(
+      0,
+      Math.round(hero.getBoundingClientRect().top + window.pageYOffset)
+    );
+
+    if (this.viewportWidth !== width) {
+      this.viewportWidth = width;
+    }
+
+    if (this.heroOffset !== offset) {
+      this.heroOffset = offset;
+    }
+  },
+},
 };
 </script>
 
@@ -268,28 +349,22 @@ export default {
   line-height: 28px;
 }
 
-/* Hero Section */
+/* Full-width hero; height fills the viewport below the shared header. */
 .hero-section {
-  padding-top: 48px;
-  padding-bottom: 48px;
-}
-@media (min-width: 768px) {
-  .hero-section {
-    padding-top: 80px;
-    padding-bottom: 80px;
-  }
+  width: var(--intro-width, 100%);
+  margin-left: calc(50% - var(--intro-width, 100%) / 2);
 }
 .hero-card {
   position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
   width: 100%;
-  height: 60vh;
-  border-radius: 8px;
+  min-height: calc(100vh - var(--intro-offset, 130px));
+  min-height: calc(100svh - var(--intro-offset, 130px));
   overflow: hidden;
-}
-@media (min-width: 768px) {
-  .hero-card {
-    height: 80vh;
-  }
+  background: #29251f;
+  color: #fff;
 }
 .hero-img {
   position: absolute;
@@ -297,15 +372,72 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 10s ease-out;
 }
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(28, 28, 23, 0.1);
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(20,17,13,.76), rgba(20,17,13,.4) 60%, rgba(20,17,13,.18));
+  pointer-events: none;
 }
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(48px, 8vh, 112px) clamp(24px, 7vw, 112px);
+  box-sizing: border-box;
+}
+.hero-eyebrow {
+  margin: 0 0 24px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.hero-title {
+  max-width: 900px;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(36px, 4.8vw, 76px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -.025em;
+  color: #fff;
+  text-wrap: balance;
+}
+.hero-description {
+  max-width: 550px;
+  margin: 24px 0 32px;
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: 1.75;
+  color: rgba(255,255,255,.92);
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 48px;
+  padding: 12px 22px;
+  border: 1px solid rgba(255,255,255,.8);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s, color .2s;
+}
+.hero-cta:hover { background: #fff; color: #29251f; }
+.hero-cta:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
 .group:hover .hero-img {
   transform: scale(1.05);
+}
+@media (max-width: 600px) {
+  .hero-overlay { background: linear-gradient(0deg, rgba(20,17,13,.8), rgba(20,17,13,.38)); }
+  .hero-eyebrow { font-size: 10px; letter-spacing: .12em; }
+  .hero-description { max-width: 34ch; }
 }
 
 /* Placeholder hiện khi ảnh chưa có / load lỗi (404) — tránh icon "ảnh vỡ" */
