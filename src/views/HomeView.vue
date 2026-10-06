@@ -170,6 +170,7 @@
 </template>
 
 <script>
+import { listingPath } from '@/utils/listingRoutes';
 import { mapState, mapGetters } from 'vuex';
 import ProductGrid from '@/components/product/ProductGrid.vue';
 import QuickViewModal from '@/components/product/QuickViewModal.vue';
@@ -433,7 +434,7 @@ export default {
     },
     categoryLink(path) {
       if (!path || !path.length) return '/danh-muc';
-      return { name: 'listing', query: { cat: path.join('/') } };
+      return listingPath(path);
     },
     subCategoriesOf(topCat) {
       return getChildCategories(this.all, [topCat]);

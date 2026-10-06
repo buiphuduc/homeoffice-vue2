@@ -1,25 +1,6 @@
 import config from '@/config';
 
-/**
- * src/utils/seo.js
- * ------------------------------------------------------------------
- * Cập nhật <title>, <meta name="description">, Open Graph, Twitter Card
- * và <link rel="canonical"> mỗi khi đổi route — vì app KHÔNG có
- * server-side rendering (đây là SPA build tĩnh bằng Vue CLI), việc này
- * chỉ chỉnh được DOM sau khi JavaScript đã chạy.
- *
- * -> Google (Googlebot render JS) và tab trình duyệt sẽ thấy đúng tiêu
- *    đề/mô tả riêng cho từng trang/sản phẩm/bài viết.
- * -> Facebook/Zalo/Messenger khi dán link KHÔNG chạy JavaScript lúc lấy
- *    preview, nên chúng sẽ luôn hiển thị đúng bộ thẻ TĨNH khai báo sẵn
- *    trong public/index.html (áp dụng cho MỌI URL, kể cả link sản phẩm)
- *    — đây là giới hạn cố hữu của SPA thuần, chỉ khắc phục triệt để
- *    bằng cách thêm prerender/SSR (vd Nuxt, hoặc dịch vụ prerender.io).
- *    Ghi chú này để không ai hiểu nhầm là "share Facebook đã ra ảnh
- *    sản phẩm" khi chưa thực sự đúng.
- * ------------------------------------------------------------------
- */
-
+/** Shared metadata for client navigation and build-time HTML. */
 const DEFAULT_TITLE = `${config.shopName} - Nội Thất Phong Cách Scandinavian`;
 const DEFAULT_DESCRIPTION = `${config.shopName} — nội thất phong cách Scandinavian tối giản: bàn ghế sofa, tủ kệ, phòng khách, phòng ngủ, bếp & phòng ăn, nội thất văn phòng. Giao hàng toàn quốc, bảo hành dài hạn.`;
 const DEFAULT_IMAGE = `${config.siteUrl}/images/banners/hero-banner.jpg`;
@@ -56,12 +37,22 @@ function upsertCanonical(href) {
  * @param {string} [opts.path] - Đường dẫn (vd '/san-pham/ABC') để tạo canonical URL tuyệt đối.
  */
 export function setPageMeta({
-  title, description, image, path,
+  title, description, image, path, noindex = false,
 } = {}) {
   const fullTitle = title ? `${title} - ${config.shopName}` : DEFAULT_TITLE;
   const desc = description || DEFAULT_DESCRIPTION;
-  const img = image || DEFAULT_IMAGE;
-  const url = path ? `${config.siteUrl}${path}` : (typeof window !== 'undefined' ? window.location.href : config.siteUrl);
+  const img = new URL(image || DEFAULT_IMAGE, `${config.siteUrl}/`).href;
+  const canonical = new URL(path || '/', `${config.siteUrl}/`);
+  canonical.hash = '';
+  while (canonical.pathname.length > 1 && canonical.pathname.endsWith('/')) canonical.pathname = canonical.pathname.slice(0, -1);
+  [...canonical.searchParams.keys()].forEach((key) => {
+    if (/^utm_/i.test(key) || ['gclid', 'fbclid', 'msclkid'].includes(key.toLowerCase())) canonical.searchParams.delete(key);
+  });
+  const utilityPrefixes = ['/gio-hang', '/thanh-toan', '/dat-hang-thanh-cong', '/yeu-thich', '/tim-kiem'];
+  const utilityPage = utilityPrefixes.some((prefix) => canonical.pathname === prefix || canonical.pathname.startsWith(`${prefix}/`));
+  const internalSearch = canonical.pathname.startsWith('/danh-muc') && canonical.searchParams.has('q');
+  upsertMeta('name', 'robots', noindex || utilityPage || internalSearch ? 'noindex, follow' : 'index, follow');
+  const url = canonical.href;
 
   document.title = fullTitle;
 

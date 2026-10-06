@@ -277,8 +277,8 @@ export default {
       if (this.productMaterials.length) {
         this.selectedMaterial = this.productMaterials[0];
       }
-      this.updateSeo(this.product);
     }
+    this.updateSeo(this.product);
   },
   methods: {
     formatVND,
@@ -286,7 +286,10 @@ export default {
     // khi `product` có dữ liệu hoặc đổi sang sản phẩm khác (params.id đổi).
     // Xem ghi chú giới hạn SPA (Facebook/Zalo preview) trong src/utils/seo.js.
     updateSeo(p) {
-      if (!p) return;
+      if (!p) {
+        setPageMeta({ title: 'Không tìm thấy sản phẩm', path: this.$route.fullPath, noindex: true });
+        return;
+      }
       const rawDesc = p.shortDesc || (p.desc ? p.desc.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : '');
       setPageMeta({
         title: p.name,
