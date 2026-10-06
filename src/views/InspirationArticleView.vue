@@ -127,7 +127,7 @@ export default {
     ctaTarget() {
       const { cta } = this.article;
       if (cta.type === 'category') return categoryLink(cta.path);
-      if (cta.type === 'search') return { name: 'listing', query: { q: cta.query } };
+      if (cta.type === 'search') return { name: 'search', query: { q: cta.query } };
       return cta.to;
     },
     relatedArticles() {

@@ -1,3 +1,5 @@
+import { listingPath } from './listingRoutes';
+
 /**
  * src/utils/category.js
  * ------------------------------------------------------------------
@@ -80,7 +82,7 @@ export function getFeaturedSubcategories(products, limit = 16) {
  */
 export function categoryLink(path) {
   if (!path || !path.length) return '/danh-muc';
-  return { name: 'listing', query: { cat: path.join('/') } };
+  return listingPath(path);
 }
 
 /**

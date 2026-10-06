@@ -102,7 +102,7 @@ export default {
       const q = this.searchQuery.trim();
       if (!q) return;
       this.mobileNavOpen = false;
-      this.$router.push({ name: 'listing', query: { q } });
+      this.$router.push({ name: 'search', query: { q } });
     },
     // Đang gõ tìm kiếm (bàn phím ảo mở) mà vuốt cuộn trang -> tự đóng bàn phím.
     // Trên iOS, cuộn nhanh khi bàn phím còn mở làm header sticky bị giật vì viewport

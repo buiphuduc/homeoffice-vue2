@@ -5,8 +5,10 @@
   "description": "HTMVN Shop - Vue 2 + Google Sheet làm nguồn dữ liệu, đặt hàng qua Zalo/Messenger (không cần backend)",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "sitemap": "node scripts/generate-sitemap.js"
+    "build": "node scripts/build-seo.js",
+    "sitemap": "node scripts/build-seo.js",
+    "preview": "node scripts/seo-server.js",
+    "test:seo": "node scripts/test-seo.js"
   },
   "dependencies": {
     "axios": "^1.6.8",
@@ -20,7 +22,12 @@
     "@vue/cli-plugin-router": "~5.0.8",
     "@vue/cli-plugin-vuex": "~5.0.8",
     "@vue/cli-service": "~5.0.8",
-    "vue-template-compiler": "^2.7.16"
+    "vue-template-compiler": "^2.7.16",
+    "playwright": "1.56.1"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not dead"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }

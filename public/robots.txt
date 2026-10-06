@@ -1,8 +1,3 @@
 User-agent: *
 Allow: /
-# Không cần Google index trang giỏ hàng/thanh toán (không phải nội dung tìm kiếm)
-Disallow: /gio-hang
-Disallow: /thanh-toan
-Disallow: /dat-hang-thanh-cong
-
-Sitemap: https://htmvn.com/sitemap.xml
+# noindex pages stay crawlable so search engines can read their meta robots tag.

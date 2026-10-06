@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 
 import HomeView from '@/views/HomeView.vue';
 import { setPageMeta } from '@/utils/seo';
+import { listingPath, listingProps, pageNumber } from '@/utils/listingRoutes';
 
 Vue.use(VueRouter);
 
@@ -40,13 +41,26 @@ const routes = [
     path: '/danh-muc',
     name: 'listing',
     component: () => import(/* webpackChunkName: "listing" */ '@/views/ListingView.vue'),
-    // Danh mục truyền qua query, ví dụ: /danh-muc?cat=Phòng Khách/Bàn Sofa hoặc /danh-muc?q=từ khóa
-    props: (route) => ({
-      catPath: route.query.cat ? route.query.cat.split('/') : [],
-      searchQuery: route.query.q || '',
-    }),
+    props: listingProps,
     meta: { title: 'Tất cả sản phẩm', description: 'Toàn bộ sản phẩm nội thất của HTMVN Shop — lọc theo danh mục, sắp xếp theo giá.' },
   },
+  {
+    path: '/tim-kiem',
+    name: 'search',
+    component: () => import(/* webpackChunkName: "listing" */ '@/views/ListingView.vue'),
+    props: (route) => ({ ...listingProps(route), page: pageNumber(route.query.page) }),
+    meta: { title: 'Tìm kiếm' },
+  },
+  ...[
+    '/danh-muc/trang/:page(\\d+)',
+    '/danh-muc/nhom/:categoryPath(.+?)/trang/:page(\\d+)',
+    '/danh-muc/nhom/:categoryPath(.+)',
+  ].map((path) => ({
+    path,
+    component: () => import(/* webpackChunkName: "listing" */ '@/views/ListingView.vue'),
+    props: listingProps,
+    meta: { title: 'Tất cả sản phẩm' },
+  })),
   {
     path: '/san-pham/:id',
     name: 'product-detail',
@@ -123,10 +137,21 @@ const router = new VueRouter({
   },
 });
 
-// Cập nhật SEO mặc định mỗi khi đổi route, dựa trên `meta.title`/
-// `meta.description` khai báo ở route tương ứng (xem phía trên). Trang
-// nào có nội dung động (sản phẩm, bài viết, danh mục...) sẽ tự gọi lại
-// `setPageMeta()` ngay trong component để ghi đè giá trị này ngay sau.
+// Keep old category and search links working as the URL structure changes.
+router.beforeEach((to, from, next) => {
+  if (to.path === '/danh-muc' && to.query.q) {
+    next({ path: '/tim-kiem', query: to.query, replace: true });
+    return;
+  }
+  if (to.path === '/danh-muc' && (to.query.cat || to.query.page)) {
+    const { cat, page, ...query } = to.query;
+    const categories = typeof cat === 'string' ? cat.split('/').filter(Boolean) : [];
+    next({ path: listingPath(categories, page), query, replace: true });
+    return;
+  }
+  next();
+});
+
 router.afterEach((to) => {
   setPageMeta({
     title: to.meta && to.meta.title,

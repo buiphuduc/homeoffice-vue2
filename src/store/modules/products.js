@@ -15,6 +15,7 @@ export default {
   state: () => ({
     items: [],
     loading: false,
+    loaded: false,
     error: null,
   }),
 
@@ -22,12 +23,12 @@ export default {
     all: (state) => state.items.filter((p) => p.published),
 
     /** Tìm 1 sản phẩm theo id (SKU) */
-    findById: (state) => (id) => state.items.find((p) => p.id === id),
+    findById: (state) => (id) => state.items.find((p) => p.published && p.id === id),
 
     /** Danh mục cấp 1 (top-level), suy ra tự động từ dữ liệu sản phẩm */
     topCategories: (state) => {
       const set = new Set();
-      state.items.forEach((p) => {
+      state.items.filter((p) => p.published).forEach((p) => {
         p.categoryPaths.forEach((path) => {
           if (path[0]) set.add(path[0]);
         });
@@ -42,6 +43,7 @@ export default {
     },
     SET_ITEMS(state, items) {
       state.items = items;
+      state.loaded = true;
     },
     SET_ERROR(state, error) {
       state.error = error;
@@ -54,7 +56,8 @@ export default {
      * App.vue khi app khởi động) — action tự xử lý trạng thái loading/error,
      * component chỉ cần đọc state.products.loading / state.products.error.
      */
-    async fetchProducts({ commit }) {
+    async fetchProducts({ commit, state }) {
+      if (state.loaded && !state.error) return;
       commit('SET_LOADING', true);
       commit('SET_ERROR', null);
       try {

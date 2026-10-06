@@ -17,8 +17,23 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true
 Vue.use(RevealDirective);
 
-new Vue({
+const app = new Vue({
   router,
   store,
   render: (h) => h(App),
 }).$mount('#app');
+
+// Wait for products only in the build browser; normal mounting is unchanged.
+if (window.__SEO_PRERENDER__) {
+  (async () => {
+    await new Promise((resolve, reject) => router.onReady(resolve, reject));
+    if (!store.state.products.loaded) await new Promise((resolve) => {
+      const stop = app.$watch(() => store.state.products.loaded, (loaded) => {
+        if (loaded) { stop(); resolve(); }
+      });
+    });
+    await Vue.nextTick();
+    const { createPrerenderBridge } = await import('./utils/prerender');
+    window.__SEO_RENDER__ = createPrerenderBridge(app, router, store);
+  })();
+}

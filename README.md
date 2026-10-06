@@ -12,7 +12,8 @@ https://nodejs.org nếu chưa có.
 
 ```bash
 # 1. Cài các thư viện cần thiết
-npm install
+npm ci
+npx playwright install chromium
 
 # 2. Tạo file cấu hình từ mẫu
 cp .env.example .env
@@ -38,27 +39,32 @@ Reload), không cần restart.
 npm run build
 ```
 
-Lệnh này tạo ra thư mục `dist/` chứa các file tĩnh (HTML/CSS/JS đã tối
-ưu). Upload TOÀN BỘ nội dung bên trong `dist/` lên hosting (Hostinger,
-Netlify, Vercel, GitHub Pages...) là xong — không cần Node.js hay bất kỳ
-server đặc biệt nào ở phía hosting, vì đây là site tĩnh hoàn toàn.
+Lệnh này tải đúng `VUE_APP_SHEET_CSV_URL`, build Vue, rồi dùng Chromium để
+xuất sẵn HTML cho trang chủ, sản phẩm, danh mục (cả trang tiếp theo), bài
+viết và chính sách. Giao diện và thành phần hiện tại được dùng để dựng
+HTML. Sitemap được tạo từ cùng danh sách URL.
 
-**Lưu ý khi deploy** (vì router dùng chế độ "history" — URL đẹp không có
-dấu `#`): cần cấu hình hosting để mọi đường dẫn đều trả về `index.html`
-(gọi là "fallback" hoặc "rewrite rule"). Cách làm cho từng nơi phổ biến:
-- **Netlify**: tạo file `dist/_redirects` với nội dung `/* /index.html 200`
-- **Hostinger (Apache)**: tạo file `dist/.htaccess` với nội dung:
-  ```
-  <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^index\.html$ - [L]
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule . /index.html [L]
-  </IfModule>
-  ```
-- **Vercel**: tự động nhận diện dự án Vue, không cần cấu hình thêm
+- Điền `VUE_APP_SITE_URL` bằng domain thật trước khi build.
+- Lần đầu: `npm ci` và `npx playwright install chromium`. CI Linux có thể
+  cần `npx playwright install --with-deps chromium`.
+- Dùng Chromium cài sẵn qua `SEO_CHROMIUM_PATH` nếu cần.
+- Build dừng nếu CSV lỗi, SKU công khai thiếu/trùng, thiếu Chromium hoặc
+  trang không render thành công.
+- `npm run sitemap` chạy lại quy trình build đầy đủ để HTML và sitemap đồng bộ.
+- `npm run preview` mở bản build ở `http://127.0.0.1:4173`.
+- `npm run test:seo` kiểm tra HTML, sitemap và điều hướng.
+
+Mỗi lần build tạo một bản CSV có mã nội dung trong `dist/data/`; website,
+HTML và sitemap đều dùng bản này. Khi sửa Google Sheet/CSV hoặc thêm bài,
+build và deploy lại toàn bộ `dist/`. `npm run serve` vẫn đọc nguồn CSV
+đang cấu hình khi phát triển.
+
+**Hosting:** upload toàn bộ `dist/`. Apache có thể dùng `.htaccess` đã tạo.
+Netlify/Vercel cần dùng các file HTML theo thư mục; bỏ catch-all rewrite về
+`index.html`. Giữ trang lỗi HTTP 404 cho URL không tồn tại. URL danh mục
+cũ `/danh-muc?cat=...` vẫn được router chuyển tới URL mới.
+Trang giỏ hàng, thanh toán, kết quả đặt hàng, yêu thích và tìm kiếm được
+đánh dấu `noindex, follow`; robots.txt cho phép crawler đọc chỉ dẫn này.
 
 ## 3. Cách lấy link Google Sheet CSV (nguồn dữ liệu sản phẩm)
 
@@ -86,8 +92,8 @@ hiển thị ra sao — dùng dấu `>` để phân cấp cha-con, ví dụ:
 `Phòng Khách > Bàn Sofa`. Muốn cập nhật/thêm sản phẩm cho 1 danh mục cụ
 thể: mở Google Sheet, lọc/sắp xếp theo cột Categories để tìm đúng nhóm
 sản phẩm, sửa hoặc thêm dòng mới với đúng chuỗi danh mục đó — vì Sheet
-đã Publish to web, thay đổi có hiệu lực ngay khi người dùng tải lại
-trang (không cần build/deploy lại). Menu, trang danh mục, bộ lọc đều tự
+đã Publish to web, khi phát triển, thay đổi có hiệu lực khi tải lại trang. Bản production
+cần build và deploy lại để cập nhật HTML và sitemap. Menu, trang danh mục, bộ lọc đều tự
 động cập nhật theo vì được suy ra 100% từ dữ liệu, không có danh mục nào
 viết cứng trong code.
 
@@ -148,8 +154,8 @@ src/
 - **Không có backend thật** — giỏ hàng/yêu thích chỉ lưu trên trình
   duyệt hiện tại (localStorage), đơn hàng không được lưu vào bất kỳ đâu
   ngoài việc gửi thủ công qua Zalo/Messenger.
-- Dữ liệu sản phẩm phụ thuộc vào Google Sheet còn Publish to web — nếu
-  bạn tắt chia sẻ hoặc xóa Sheet, site sẽ không tải được sản phẩm.
+- Build cần truy cập Google Sheet đã Publish to web. Bản production dùng
+  bản dữ liệu lưu cùng HTML đã deploy.
 - Vì là site tĩnh, không có tìm kiếm/lọc phía server — toàn bộ xử lý ở
   trình duyệt khách, phù hợp với quy mô vài trăm sản phẩm trở xuống; nếu
   catalog lên tới hàng chục nghìn sản phẩm, nên cân nhắc giải pháp có

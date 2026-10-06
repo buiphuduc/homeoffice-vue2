@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
+import { listingPath } from '@/utils/listingRoutes';
 import { getChildCategories, hasGrandchildren } from '@/utils/category';
 
 /**
@@ -80,7 +81,7 @@ export default {
   },
   computed: {
     ...mapGetters('products', ['topCategories']),
-    ...mapState('products', { allProducts: (state) => state.items }),
+    ...mapGetters('products', { allProducts: 'all' }),
   },
   watch: {
     // Đóng menu từ ngoài (bấm hamburger đóng lại) -> cũng thu gọn dropdown con đang mở dở
@@ -98,7 +99,7 @@ export default {
       return hasGrandchildren(this.allProducts, cat);
     },
     listingLink(catPath) {
-      return { name: 'listing', query: { cat: catPath.join('/') } };
+      return listingPath(catPath);
     },
     toggleExpand(cat) {
       this.expandedCat = this.expandedCat === cat ? null : cat;

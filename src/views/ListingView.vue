@@ -51,17 +51,18 @@
         ></product-grid>
 
         <div class="pagination" v-if="totalPages > 1">
-          <button :disabled="curPage === 1" @click="curPage--"><i class="fa-solid fa-chevron-left"></i></button>
-          
-          <!-- Đã sửa: lặp qua mảng visiblePages thay vì totalPages -->
-          <button
+          <button v-if="curPage === 1" disabled aria-label="Trang trước"><i class="fa-solid fa-chevron-left"></i></button>
+          <router-link v-else class="page-link" :to="pageLink(curPage - 1)" rel="prev" aria-label="Trang trước"><i class="fa-solid fa-chevron-left"></i></router-link>
+          <router-link
             v-for="n in visiblePages"
             :key="n"
+            class="page-link"
             :class="{ active: curPage === n }"
-            @click="curPage = n"
-          >{{ n }}</button>
-          
-          <button :disabled="curPage === totalPages" @click="curPage++"><i class="fa-solid fa-chevron-right"></i></button>
+            :aria-current="curPage === n ? 'page' : null"
+            :to="pageLink(n)"
+          >{{ n }}</router-link>
+          <button v-if="curPage === totalPages" disabled aria-label="Trang sau"><i class="fa-solid fa-chevron-right"></i></button>
+          <router-link v-else class="page-link" :to="pageLink(curPage + 1)" rel="next" aria-label="Trang sau"><i class="fa-solid fa-chevron-right"></i></router-link>
         </div>
       </div>
     </div>
@@ -78,6 +79,7 @@ import productActionsMixin from '@/mixins/productActions';
 import { productMatchesCategoryPath } from '@/utils/category';
 import { setPageMeta } from '@/utils/seo';
 import config from '@/config';
+import { listingPath } from '@/utils/listingRoutes';
 
 /**
  * Trang danh mục / kết quả tìm kiếm. Dùng chung 1 view cho cả 2 trường
@@ -89,6 +91,7 @@ export default {
   components: { ProductGrid, QuickViewModal },
   mixins: [productActionsMixin],
   props: {
+    page: { type: Number, default: 1 },
     catPath: {
       type: Array,
       default: () => [],
@@ -101,11 +104,11 @@ export default {
   data() {
     return {
       sortKey: 'default',
-      curPage: 1,
       pageSize: config.listing.pageSize,
     };
   },
   computed: {
+    curPage() { return this.page; },
     ...mapState('products', { loading: (state) => state.loading }),
     ...mapGetters('products', ['all', 'topCategories']),
 
@@ -172,36 +175,32 @@ export default {
     }
   },
   watch: {
-    // Đổi danh mục/từ khóa tìm kiếm (qua router) -> luôn quay về trang 1
-    catPath() {
-      this.curPage = 1;
-    },
-    searchQuery() {
-      this.curPage = 1;
-    },
     sortKey() {
-      this.curPage = 1;
+      if (this.curPage !== 1) this.$router.push(this.pageLink(1));
     },
-    // Đổi danh mục/từ khóa -> tiêu đề SEO đổi theo (vd "Phòng Khách - HTMVN Shop").
-    // immediate:true để chạy luôn cả lúc mới vào trang, không cần thêm created().
-    pageTitle: {
+    '$route.fullPath': {
       immediate: true,
-      handler(title) {
-        setPageMeta({
-          title,
-          description: `Xem ${title.toLowerCase()} tại ${config.shopName} — giao hàng toàn quốc, bảo hành dài hạn.`,
-          path: this.$route.fullPath,
-        });
-      },
+      handler() { this.updateSeo(); },
     },
+    loading() { this.updateSeo(); },
   },
   methods: {
-    goToCategory(path) {
-      if (!path.length) {
-        this.$router.push({ name: 'listing' });
-      } else {
-        this.$router.push({ name: 'listing', query: { cat: path.join('/') } });
+    pageLink(page) {
+      if (this.$route.name === 'search') {
+        return { name: 'search', query: { ...this.$route.query, page: page > 1 ? String(page) : undefined } };
       }
+      return { path: listingPath(this.catPath, page), query: { ...this.$route.query } };
+    },
+    updateSeo() {
+      setPageMeta({
+        title: this.pageTitle,
+        description: `Xem ${this.pageTitle.toLowerCase()} tại ${config.shopName} — giao hàng toàn quốc, bảo hành dài hạn.`,
+        path: this.$route.fullPath,
+        noindex: Boolean(this.searchQuery) || (!this.loading && (!this.sortedProducts.length || this.curPage > this.totalPages)),
+      });
+    },
+    goToCategory(path) {
+      this.$router.push(listingPath(path));
     },
   },
 };
