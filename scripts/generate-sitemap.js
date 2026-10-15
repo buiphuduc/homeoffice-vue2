@@ -30,8 +30,8 @@ const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'sitemap.xml');
 
 // Giữ đồng bộ tay với slug thật trong src/content/inspirationArticles.js
 const INSPIRATION_SLUGS = [
-  'anh-sang-bac-au',
-  've-dep-go-soi',
+  'anh-sang-phong-khach',
+  'van-cong-nghiep-ben-dep',
   'mau-trung-tinh-phong-ngu',
   'phoi-vai-khong-gian-nho',
   'bep-toi-gian-cong-nang',

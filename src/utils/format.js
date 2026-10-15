@@ -10,11 +10,15 @@
 
 /**
  * Định dạng số thành chuỗi tiền VNĐ, ví dụ: 2950000 -> "2.950.000 đ"
+ * Giá rỗng/0 -> "Liên hệ".
  * @param {number} amount
  * @returns {string}
  */
 export function formatVND(amount) {
   const n = Number(amount) || 0;
+  // Chưa có giá (ô giá trong CSV để trống / bằng 0) -> hiển thị "Liên hệ".
+  // Khi nào có giá, chỉ cần điền "Regular price" trong products.csv.
+  if (n <= 0) return 'Giá: Liên hệ';
   // \u00A0 = dấu cách KHÔNG ngắt dòng: chữ "đ" luôn dính liền số tiền, không bị rớt xuống dòng riêng
   return `${Math.round(n).toLocaleString('vi-VN')}\u00A0đ`;
 }

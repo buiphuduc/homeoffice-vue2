@@ -33,7 +33,7 @@ const routes = [
     name: 'home',
     component: HomeView,
     meta: {
-      description: 'HTMVN Shop — nội thất phong cách Scandinavian tối giản: bàn ghế sofa, tủ kệ, phòng khách, phòng ngủ, bếp & phòng ăn, nội thất văn phòng. Giao hàng toàn quốc, bảo hành dài hạn.',
+      description: 'HTM Design & Build — nội thất ván công nghiệp MDF Melamine, Plywood chuẩn E0/E1, CARB-P2 cho phòng khách, phòng ngủ, bếp & phòng ăn, phòng làm việc, văn phòng. Sản xuất bằng máy móc tự động hóa, chuẩn xác từng milimet.',
     },
   },
   {
@@ -45,7 +45,7 @@ const routes = [
       catPath: route.query.cat ? route.query.cat.split('/') : [],
       searchQuery: route.query.q || '',
     }),
-    meta: { title: 'Tất cả sản phẩm', description: 'Toàn bộ sản phẩm nội thất của HTMVN Shop — lọc theo danh mục, sắp xếp theo giá.' },
+    meta: { title: 'Tất cả sản phẩm', description: 'Toàn bộ sản phẩm nội thất của HTMVN Shop — lọc theo danh mục.' },
   },
   {
     path: '/san-pham/:id',
@@ -81,19 +81,19 @@ const routes = [
     path: '/gioi-thieu',
     name: 'introduce',
     component: () => import(/* webpackChunkName: "introduce" */ '@/views/IntroduceView.vue'),
-    meta: { title: 'Giới thiệu', description: 'Câu chuyện thương hiệu HTMVN Shop — nơi kỹ thuật chính xác gặp gỡ thẩm mỹ Scandinavian tối giản.' },
+    meta: { title: 'Giới thiệu', description: 'HTM Design & Build — kiến tạo không gian, nuôi dưỡng tâm hồn. Nội thất ván công nghiệp MDF Melamine, Plywood, tiêu chuẩn E0/E1, CARB-P2, sản xuất bằng máy móc tự động hóa chuẩn xác từng milimet.' },
   },
   {
     path: '/lien-he',
     name: 'contact',
     component: () => import(/* webpackChunkName: "contact" */ '@/views/ContactView.vue'),
-    meta: { title: 'Liên hệ', description: 'Thông tin liên hệ, địa chỉ showroom và biểu mẫu gửi tin nhắn tới HTMVN Shop.' },
+    meta: { title: 'Liên hệ', description: 'Thông tin liên hệ, địa chỉ văn phòng, xưởng sản xuất và biểu mẫu gửi tin nhắn tới HTMVN Shop.' },
   },
   {
     path: '/cam-hung-sang-tao',
     name: 'inspiration',
     component: () => import(/* webpackChunkName: "inspiration" */ '@/views/InspirationView.vue'),
-    meta: { title: 'Cảm hứng thiết kế', description: 'Ý tưởng, xu hướng và hướng dẫn thiết kế nội thất phong cách Scandinavian từ HTMVN Shop.' },
+    meta: { title: 'Cảm hứng thiết kế', description: 'Ý tưởng, xu hướng và hướng dẫn bố trí không gian sống đơn giản, hiện đại, tiện nghi từ HTM Design & Build.' },
   },
   {
     path: '/cam-hung-sang-tao/:slug',

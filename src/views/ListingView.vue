@@ -14,8 +14,8 @@
       </h2>
       <select class="sort-select" v-model="sortKey">
         <option value="default">Mặc định</option>
-        <option value="price-asc">Giá thấp đến cao</option>
-        <option value="price-desc">Giá cao đến thấp</option>
+        <option v-if="hasPrices" value="price-asc">Giá thấp đến cao</option>
+        <option v-if="hasPrices" value="price-desc">Giá cao đến thấp</option>
         <option value="name-asc">Tên A-Z</option>
       </select>
     </div>
@@ -108,6 +108,10 @@ export default {
   computed: {
     ...mapState('products', { loading: (state) => state.loading }),
     ...mapGetters('products', ['all', 'topCategories']),
+    // Ẩn mục sắp xếp theo giá khi chưa sản phẩm nào có giá
+    hasPrices() {
+      return this.all.some((p) => p.effectivePrice > 0);
+    },
 
     pageTitle() {
       if (this.searchQuery) return `Tìm kiếm: "${this.searchQuery}"`;

@@ -19,8 +19,9 @@
     </div>
 
     <router-link :to="detailLink" class="thumb">
-      <img v-if="product.images[0]" :src="product.images[0]" :alt="product.name">
-      <i v-else class="fa-solid fa-couch"></i>
+      <safe-image :sources="product.images" :alt="product.name">
+        <i class="fa-solid fa-couch"></i>
+      </safe-image>
     </router-link>
 
     <div class="info">
@@ -44,6 +45,7 @@
 </template>
 
 <script>
+import SafeImage from '@/components/common/SafeImage.vue';
 import { formatVND, calcDiscountPercent } from '@/utils/format';
 
 /**
@@ -55,6 +57,7 @@ import { formatVND, calcDiscountPercent } from '@/utils/format';
  */
 export default {
   name: 'ProductCard',
+  components: { SafeImage },
   props: {
     product: {
       type: Object,

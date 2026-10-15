@@ -21,7 +21,8 @@
 
     <div class="footer-bottom">
       <strong> {{ year }} {{ shopName }} — CÔNG TY TNHH KỸ THUẬT HTM <br><br></strong>
-Địa chỉ: 354/47/12/57 Quốc lộ 1A, Phường Bình Tân, Tp. Hồ Chí Minh, Việt Nam <br>
+Văn phòng: 354/47/12/57 Quốc lộ 1A, Phường Bình Tân, Tp. Hồ Chí Minh, Việt Nam <br>
+Xưởng sản xuất: 482/9 Quốc lộ 1A, Phường Bình Tân, Tp. Hồ Chí Minh, Việt Nam <br>
 
 Website: www.htmvn.com.vn Ι Email: kythuathtmvn@gmail.com Ι Hotline: 0868.078.988
     </div>

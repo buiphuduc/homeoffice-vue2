@@ -30,7 +30,11 @@ export default {
 
   getters: {
     count: (state) => state.items.reduce((sum, i) => sum + i.qty, 0),
-    total: (state) => state.items.reduce((sum, i) => sum + i.qty * i.product.effectivePrice, 0),
+    // Chỉ cần 1 sản phẩm chưa có giá thì tổng = 0 (giao diện hiển thị "Liên hệ"),
+    // tránh hiện tổng thấp hơn thực tế khi giỏ lẫn sản phẩm có giá và chưa có giá.
+    total: (state) => (state.items.some((i) => !(i.product.effectivePrice > 0))
+      ? 0
+      : state.items.reduce((sum, i) => sum + i.qty * i.product.effectivePrice, 0)),
     isEmpty: (state) => state.items.length === 0,
   },
 

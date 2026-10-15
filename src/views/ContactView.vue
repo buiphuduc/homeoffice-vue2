@@ -2,7 +2,7 @@
   <div class="container contact-view">
     <div class="contact-hero" v-reveal>
       <h1>Liên hệ</h1>
-      <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn trong việc kiến tạo không gian sống hoàn hảo mang đậm phong cách Bắc Âu.</p>
+      <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn trong việc kiến tạo không gian sống đơn giản, hiện đại, tiện nghi và mang đậm dấu ấn cá nhân.</p>
     </div>
 
     <div class="contact-grid">
@@ -86,11 +86,19 @@
           <div class="ci-row">
             <span class="ci-icon"><i class="fa-solid fa-location-dot"></i></span>
             <div>
-              <div class="ci-label">Showroom</div>
+              <div class="ci-label">Văn phòng</div>
               <div class="ci-value">
                 <strong>{{ company.legalName }}</strong><br>
                 {{ company.address }}
               </div>
+            </div>
+          </div>
+
+          <div class="ci-row">
+            <span class="ci-icon"><i class="fa-solid fa-industry"></i></span>
+            <div>
+              <div class="ci-label">Xưởng sản xuất</div>
+              <div class="ci-value">{{ company.workshopAddress }}</div>
             </div>
           </div>
 

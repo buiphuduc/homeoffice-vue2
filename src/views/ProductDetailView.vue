@@ -145,8 +145,9 @@
             class="similar-item"
           >
             <div class="similar-thumb">
-              <img v-if="sp.images && sp.images[0]" :src="sp.images[0]" :alt="sp.name">
-              <i v-else class="fa-solid fa-couch"></i>
+              <safe-image :sources="sp.images || []" :alt="sp.name">
+                <i class="fa-solid fa-couch"></i>
+              </safe-image>
             </div>
             <div>
               <div class="similar-name">{{ sp.name }}</div>
@@ -171,6 +172,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue';
 import ProductGallery from '@/components/product/ProductGallery.vue';
+import SafeImage from '@/components/common/SafeImage.vue';
 import ShippingWarrantyPolicy from '@/components/product/ShippingWarrantyPolicy.vue';
 import productActionsMixin from '@/mixins/productActions';
 import { formatVND } from '@/utils/format';
@@ -180,6 +182,7 @@ import { setPageMeta } from '@/utils/seo';
 export default {
   name: 'ProductDetailView',
   components: {
+    SafeImage,
     LoadingSpinner, EmptyState, CollapsibleSection, ProductGallery, ShippingWarrantyPolicy,
   },
   mixins: [productActionsMixin],

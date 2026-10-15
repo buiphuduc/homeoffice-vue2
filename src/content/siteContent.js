@@ -56,7 +56,7 @@ export default {
         id: 'wabi',
         name: 'Phòng làm việc',
         title: 'Góc làm việc\ntại nhà đầy cảm hứng',
-        sub: 'Bàn gỗ sồi, kệ sách trắng, ánh sáng tự nhiên',
+        sub: 'Bàn làm việc gọn gàng, tông gỗ sáng và trắng, ánh sáng tự nhiên',
         cta: 'Xem nội thất làm việc',
         image: '/images/banners/workingroom.webp',
         path: ['Phòng Làm Việc'],
@@ -186,12 +186,12 @@ export default {
     {
       number: 1,
       title: 'Chất liệu ưu việt',
-      desc: 'Chất liệu tạo nên sản phẩm nội thất luôn là yếu tố quan trọng nhất, được lựa chọn kỹ càng từ các nhà cung cấp tốt nhất.',
+      desc: 'Từ MDF phủ Melamine chống ẩm đến Plywood, MDF tiêu chuẩn E0/E1, CARB-P2 — thân thiện với môi trường và an toàn cho sức khỏe cả gia đình.',
     },
     {
       number: 2,
-      title: 'Sản xuất hoàn thiện',
-      desc: 'Sản phẩm hoàn thiện qua quá trình sản xuất và chất lượng thi công từ bàn tay những người thợ lành nghề.',
+      title: 'Sản xuất chuẩn xác',
+      desc: 'Hệ thống máy móc tự động hóa hiện đại giúp triệt tiêu sai số, đảm bảo độ chính xác và sự đồng đều cho mọi sản phẩm.',
     },
     {
       number: 3,
@@ -221,6 +221,7 @@ export default {
   companyInfo: {
     legalName: 'CÔNG TY TNHH KỸ THUẬT HTM',
     address: '354/47/12/57 Quốc lộ 1A, Phường Bình Tân, Tp. Hồ Chí Minh, Việt Nam',
+    workshopAddress: '482/9 Quốc lộ 1A, Phường Bình Tân, Tp. Hồ Chí Minh, Việt Nam',
     taxCode: '0319.078.988',
     email: 'kythuathtmvn@gmail.com',
     // Hotline hiển thị/gọi lấy chung từ config (đã đồng bộ trong .env) để

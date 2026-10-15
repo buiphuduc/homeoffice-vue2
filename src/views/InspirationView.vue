@@ -5,7 +5,7 @@
       <!-- Header Section -->
       <header class="page-header fade-in-up">
         <h1 class="page-title text-on-surface">Cảm hứng thiết kế</h1>
-        <p class="page-subtitle text-variant">Khám phá những ý tưởng, xu hướng mới nhất từ {{ shopName }} và câu chuyện đằng sau phong cách sống Scandinavian tĩnh lặng, ấm áp.</p>
+        <p class="page-subtitle text-variant">Khám phá những ý tưởng, xu hướng mới nhất từ {{ shopName }} và cách biến ngôi nhà thành chốn về bình yên, tiện nghi cho cả gia đình.</p>
       </header>
 
       <!-- Category Filter Chips -->
@@ -23,12 +23,12 @@
       <!-- Featured Article (Bento style) -->
       <section class="featured-bento fade-in-up delay-2">
         <!-- Main Featured -->
-        <router-link :to="{ name: 'inspiration-article', params: { slug: 'anh-sang-bac-au' } }" class="bento-main bento-card group">
+        <router-link :to="{ name: 'inspiration-article', params: { slug: 'anh-sang-phong-khach' } }" class="bento-main bento-card group">
           <img
             v-show="!imgBroken.heroMain"
             class="bento-img"
             src="/images/cam-hung/anh-sang-bac-au.jpg"
-            alt="Phòng khách ngập ánh sáng tự nhiên theo phong cách Bắc Âu"
+            alt="Phòng khách ngập ánh sáng tự nhiên, ấm áp và thư thái"
             @error="imgErr('heroMain')"
           />
           <div class="img-fallback" v-if="imgBroken.heroMain">
@@ -37,8 +37,8 @@
           <div class="bento-overlay-dark"></div>
           <div class="bento-content">
             <span class="badge badge-surface">BÀI VIẾT NỔI BẬT</span>
-            <h2 class="bento-title text-white">Nghệ thuật ánh sáng trong không gian Bắc Âu</h2>
-            <p class="bento-desc text-white-dim">Làm thế nào để tối đa hóa ánh sáng tự nhiên và sử dụng đèn trang trí để tạo ra bầu không khí ấm cúng (hygge) trong những ngày đông giá lạnh.</p>
+            <h2 class="bento-title text-white">Nghệ thuật ánh sáng cho phòng khách</h2>
+            <p class="bento-desc text-white-dim">Làm thế nào để tối đa hóa ánh sáng tự nhiên và sử dụng đèn trang trí để tạo ra bầu không khí ấm cúng, thư giãn mỗi buổi tối.</p>
             <div class="bento-meta text-white-dim">
               <span>Đội ngũ nội dung {{ shopName }}</span>
               <span class="dot">•</span>
@@ -49,12 +49,12 @@
 
         <!-- Side Featured -->
         <div class="bento-side">
-          <router-link :to="{ name: 'inspiration-article', params: { slug: 've-dep-go-soi' } }" class="bento-card side-card group">
+          <router-link :to="{ name: 'inspiration-article', params: { slug: 'van-cong-nghiep-ben-dep' } }" class="bento-card side-card group">
             <img
               v-show="!imgBroken.heroSide"
               class="bento-img"
               src="/images/cam-hung/ban-go-soi.jpg"
-              alt="Bàn sofa gỗ sồi tự nhiên nguyên khối"
+              alt="Bàn sofa ván công nghiệp vân gỗ sáng"
               @error="imgErr('heroSide')"
             />
             <div class="img-fallback" v-if="imgBroken.heroSide">
@@ -63,7 +63,7 @@
             <div class="bento-overlay-light"></div>
             <div class="side-content bg-gradient-bottom">
               <span class="tag text-primary-light">VẬT LIỆU</span>
-              <h3 class="side-title text-white">Vẻ đẹp vượt thời gian của gỗ sồi</h3>
+              <h3 class="side-title text-white">Ván công nghiệp: bền đẹp, an toàn cho cả nhà</h3>
             </div>
           </router-link>
           
@@ -144,7 +144,7 @@
               v-show="!imgBroken.kitchen"
               class="img-fluid"
               src="/images/cam-hung/bep-toi-gian.jpg"
-              alt="Gian bếp tối giản phong cách Scandinavian"
+              alt="Gian bếp tối giản, gọn gàng, đủ công năng"
               @error="imgErr('kitchen')"
             />
             <div class="img-fallback" v-if="imgBroken.kitchen">

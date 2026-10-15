@@ -9,7 +9,7 @@
           
           <!-- Ảnh sản phẩm -->
           <div class="cart-item-thumb">
-            <img v-if="line.product.images[0]" :src="line.product.images[0]" :alt="line.product.name">
+            <safe-image :sources="line.product.images" :alt="line.product.name"></safe-image>
           </div>
           
           <!-- Thông tin & Công cụ -->
@@ -89,11 +89,12 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import EmptyState from '@/components/common/EmptyState.vue';
+import SafeImage from '@/components/common/SafeImage.vue';
 import { formatVND } from '@/utils/format';
 
 export default {
   name: 'CartView',
-  components: { EmptyState },
+  components: { EmptyState, SafeImage },
   computed: {
     ...mapState('cart', { items: (state) => state.items }),
     ...mapGetters('cart', { total: 'total' }),

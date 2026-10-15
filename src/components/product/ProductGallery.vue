@@ -5,25 +5,25 @@
       @touchstart="onTouchStart"
       @touchend="onTouchEnd"
     >
-      <img v-if="currentImage" :src="currentImage" :alt="altText">
+      <img v-if="currentImage" :src="currentImage" :alt="altText" @error="markFailed(currentImage)">
       <i v-else class="fa-solid fa-couch gallery-placeholder-icon"></i>
 
       <!-- Mũi tên chuyển ảnh — chỉ hiện khi có từ 2 ảnh trở lên -->
-      <template v-if="images.length > 1">
+      <template v-if="visibleImages.length > 1">
         <button class="gallery-arrow left" @click="prev" aria-label="Ảnh trước">
           <i class="fa-solid fa-chevron-left"></i>
         </button>
         <button class="gallery-arrow right" @click="next" aria-label="Ảnh sau">
           <i class="fa-solid fa-chevron-right"></i>
         </button>
-        <span class="gallery-counter">{{ activeIndex + 1 }} / {{ images.length }}</span>
+        <span class="gallery-counter">{{ activeIndex + 1 }} / {{ visibleImages.length }}</span>
       </template>
     </div>
 
     <!-- Chấm tròn báo vị trí ảnh — chủ yếu để dùng trên di động khi lướt (swipe) -->
-    <div class="gallery-dots" v-if="images.length > 1">
+    <div class="gallery-dots" v-if="visibleImages.length > 1">
       <span
-        v-for="(img, i) in images"
+        v-for="(img, i) in visibleImages"
         :key="'dot' + i"
         :class="{ active: i === activeIndex }"
         @click="goTo(i)"
@@ -31,15 +31,15 @@
     </div>
 
     <!-- Dãy ảnh nhỏ để bấm chọn nhanh — hữu ích trên màn hình rộng (desktop) -->
-    <div class="pd-thumbs" v-if="images.length > 1">
+    <div class="pd-thumbs" v-if="visibleImages.length > 1">
       <div
         class="t"
         :class="{ active: i === activeIndex }"
-        v-for="(img, i) in images"
+        v-for="(img, i) in visibleImages"
         :key="'thumb' + i"
         @click="goTo(i)"
       >
-        <img :src="img">
+        <img :src="img" @error="markFailed(img)">
       </div>
     </div>
   </div>
@@ -73,11 +73,15 @@ export default {
     return {
       activeIndex: 0,
       touchStartX: 0,
+      failedImages: {}, // URL ảnh bị lỗi (chưa có file) -> tự ẩn, có bao nhiêu ảnh hiện bấy nhiêu
     };
   },
   computed: {
+    visibleImages() {
+      return this.images.filter((src) => !this.failedImages[src]);
+    },
     currentImage() {
-      return this.images[this.activeIndex] || null;
+      return this.visibleImages[this.activeIndex] || null;
     },
   },
   watch: {
@@ -87,14 +91,18 @@ export default {
     },
   },
   methods: {
+    markFailed(src) {
+      this.$set(this.failedImages, src, true);
+      if (this.activeIndex >= this.visibleImages.length) this.activeIndex = 0;
+    },
     goTo(i) {
       this.activeIndex = i;
     },
     next() {
-      this.activeIndex = (this.activeIndex + 1) % this.images.length;
+      this.activeIndex = (this.activeIndex + 1) % this.visibleImages.length;
     },
     prev() {
-      this.activeIndex = (this.activeIndex - 1 + this.images.length) % this.images.length;
+      this.activeIndex = (this.activeIndex - 1 + this.visibleImages.length) % this.visibleImages.length;
     },
     onTouchStart(e) {
       this.touchStartX = e.changedTouches[0].clientX;
@@ -103,7 +111,7 @@ export default {
       const touchEndX = e.changedTouches[0].clientX;
       const diff = touchEndX - this.touchStartX;
       const SWIPE_THRESHOLD = 40; // vuốt tối thiểu 40px mới tính là swipe, tránh nhầm với chạm nhẹ
-      if (Math.abs(diff) < SWIPE_THRESHOLD || this.images.length < 2) return;
+      if (Math.abs(diff) < SWIPE_THRESHOLD || this.visibleImages.length < 2) return;
       if (diff < 0) {
         this.next(); // vuốt sang trái -> ảnh kế tiếp
       } else {

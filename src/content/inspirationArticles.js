@@ -27,15 +27,15 @@ import config from '@/config';
 
 export default [
   {
-    slug: 'anh-sang-bac-au',
+    slug: 'anh-sang-phong-khach',
     category: 'PHÒNG KHÁCH',
     tag: 'Ý tưởng chiếu sáng',
-    title: 'Nghệ thuật ánh sáng trong không gian Bắc Âu',
-    excerpt: 'Làm thế nào để tối đa hóa ánh sáng tự nhiên và sử dụng đèn trang trí để tạo ra bầu không khí ấm cúng (hygge) trong những ngày đông giá lạnh.',
+    title: 'Nghệ thuật ánh sáng cho phòng khách',
+    excerpt: 'Làm thế nào để tối đa hóa ánh sáng tự nhiên và sử dụng đèn trang trí để tạo ra bầu không khí ấm cúng, thư giãn mỗi buổi tối.',
     readTime: 'Đọc 5 phút',
     cover: '/images/cam-hung/anh-sang-bac-au.jpg',
-    coverAlt: 'Phòng khách ngập ánh sáng tự nhiên theo phong cách Bắc Âu',
-    intro: 'Ánh sáng là "vật liệu" vô hình nhưng quan trọng bậc nhất trong một không gian sống mang tinh thần Scandinavian. Không cần nội thất đắt tiền, chỉ cần bố trí ánh sáng đúng cách, căn phòng đã đủ ấm áp và thư thái.',
+    coverAlt: 'Phòng khách ngập ánh sáng tự nhiên, ấm áp và thư thái',
+    intro: 'Ánh sáng là "vật liệu" vô hình nhưng quan trọng bậc nhất trong một không gian sống tiện nghi, thư thái. Không cần nội thất đắt tiền, chỉ cần bố trí ánh sáng đúng cách, căn phòng đã đủ ấm áp và thư thái.',
     sections: [
       {
         heading: 'Tận dụng tối đa ánh sáng tự nhiên',
@@ -45,7 +45,7 @@ export default [
       },
       {
         heading: 'Ánh sáng nhân tạo ấm áp cho buổi tối',
-        body: 'Khi trời tắt nắng, thay vì bật một nguồn đèn trần duy nhất, hãy phân lớp ánh sáng: đèn sàn góc đọc sách, đèn bàn cạnh sofa, và đèn tường dịu nhẹ. Chọn nhiệt độ màu ấm (2700–3000K) thay vì ánh sáng trắng lạnh để giữ đúng tinh thần "hygge" — dễ chịu, riêng tư, không chói mắt.',
+        body: 'Khi trời tắt nắng, thay vì bật một nguồn đèn trần duy nhất, hãy phân lớp ánh sáng: đèn sàn góc đọc sách, đèn bàn cạnh sofa, và đèn tường dịu nhẹ. Chọn nhiệt độ màu ấm (2700–3000K) thay vì ánh sáng trắng lạnh để không gian luôn dễ chịu, riêng tư, không chói mắt.',
         image: '/images/cam-hung/den-ban-am-cung.jpg',
         imageAlt: 'Đèn bàn ánh sáng vàng ấm đặt cạnh sofa vào buổi tối',
       },
@@ -53,30 +53,30 @@ export default [
     cta: { type: 'category', path: ['Phòng Khách'], label: 'Khám phá nội thất phòng khách' },
   },
   {
-    slug: 've-dep-go-soi',
+    slug: 'van-cong-nghiep-ben-dep',
     category: 'PHÒNG KHÁCH',
     tag: 'Vật liệu',
-    title: 'Vẻ đẹp vượt thời gian của gỗ sồi',
-    excerpt: 'Vì sao gỗ sồi tự nhiên luôn là lựa chọn hàng đầu cho nội thất bền đẹp theo năm tháng, và cách chăm sóc để giữ vẻ đẹp nguyên bản của thớ gỗ.',
+    title: 'Ván công nghiệp: bền đẹp, an toàn cho cả nhà',
+    excerpt: 'MDF phủ Melamine chống ẩm, Plywood, tiêu chuẩn E0/E1, CARB-P2 — chọn đúng vật liệu để nội thất bền bỉ, kinh tế và an toàn cho sức khỏe cả gia đình.',
     readTime: 'Đọc 4 phút',
     cover: '/images/cam-hung/ban-go-soi.jpg',
-    coverAlt: 'Bàn sofa gỗ sồi tự nhiên nguyên khối',
-    intro: 'Gỗ sồi tự nhiên nguyên khối là một trong những vật liệu được ưa chuộng nhất trong thiết kế Scandinavian — không chỉ vì độ bền cơ học vượt trội mà còn vì đường vân gỗ đặc trưng, mang lại cảm giác ấm áp, gần gũi cho mọi không gian.',
+    coverAlt: 'Bàn sofa ván công nghiệp vân gỗ sáng',
+    intro: 'Nội thất ván công nghiệp ngày nay đáp ứng linh hoạt từ phân khúc bình dân đến cao cấp. Điều quan trọng không chỉ là vẻ ngoài, mà là chọn đúng dòng vật liệu cho từng không gian và đúng tiêu chuẩn an toàn cho sức khỏe.',
     sections: [
       {
-        heading: 'Vì sao gỗ sồi được ưa chuộng',
-        body: 'So với gỗ công nghiệp, gỗ sồi nguyên khối chịu lực tốt hơn, ít cong vênh theo thời gian và có thể sửa chữa/đánh bóng lại nhiều lần. Vân gỗ tự nhiên với các đường vòng đặc trưng khiến mỗi món đồ gần như "độc bản" — không món nào giống món nào.',
+        heading: 'Chọn dòng vật liệu theo nhu cầu',
+        body: 'MDF phủ Melamine chống ẩm là lựa chọn phổ thông: bề mặt bền bỉ, đa dạng màu và vân gỗ, tính kinh tế cao. Với nhu cầu cao hơn, các dòng Plywood hoặc MDF đạt tiêu chuẩn E0/E1, CARB-P2 có mức phát thải formaldehyde thấp, thân thiện với môi trường và đặc biệt phù hợp cho phòng ngủ, phòng trẻ nhỏ.',
         image: '/images/cam-hung/van-go-soi-macro.jpg',
-        imageAlt: 'Cận cảnh vân gỗ sồi tự nhiên',
+        imageAlt: 'Cận cảnh bề mặt ván công nghiệp vân gỗ',
       },
       {
-        heading: 'Bảo quản đồ gỗ sồi bền đẹp theo năm tháng',
-        body: 'Tránh ánh nắng trực tiếp kéo dài để không bị bạc màu, dùng khăn ẩm mềm lau bề mặt thay vì hóa chất tẩy rửa mạnh, và định kỳ dùng dầu dưỡng gỗ chuyên dụng mỗi 6–12 tháng để lớp bề mặt luôn có độ bóng tự nhiên.',
+        heading: 'Giữ nội thất bền đẹp theo năm tháng',
+        body: 'Lau bề mặt bằng khăn ẩm mềm rồi lau khô, tránh để nước đọng lâu ở cạnh ván và các mối nối. Hạn chế đặt sát nguồn nhiệt hoặc nơi ẩm ướt kéo dài, và tránh dùng hóa chất tẩy rửa mạnh để lớp bề mặt luôn đẹp, không bong tróc.',
         image: '/images/cam-hung/ban-an-go-soi.jpg',
-        imageAlt: 'Bàn ăn gỗ sồi tự nhiên trong không gian bếp',
+        imageAlt: 'Bàn ăn bề mặt vân gỗ trong không gian bếp',
       },
     ],
-    cta: { type: 'category', path: ['Phòng Khách', 'Bàn Sofa'], label: 'Xem bàn sofa gỗ sồi' },
+    cta: { type: 'route', to: '/gioi-thieu', label: 'Tìm hiểu về vật liệu của HTM' },
   },
   {
     slug: 'mau-trung-tinh-phong-ngu',
@@ -90,7 +90,7 @@ export default [
     intro: 'Một phòng ngủ đẹp không cần nhiều màu sắc rực rỡ. Bảng màu trung tính giúp không gian trông rộng hơn, dịu mắt hơn, và quan trọng nhất — không bao giờ lỗi thời.',
     sections: [
       {
-        heading: 'Bảng màu trung tính chuẩn Hygge',
+        heading: 'Bảng màu trung tính dễ phối',
         body: 'Kết hợp 2–3 tông màu be/kem/nâu đất làm nền, sau đó thêm 1 điểm nhấn nhẹ (xanh rêu, nâu gỗ đậm) qua chăn gối hoặc thảm trải. Tránh phối quá 3 tông màu chính để không gian không bị rối mắt.',
         image: '/images/cam-hung/phong-ngu-chi-tiet-vai.jpg',
         imageAlt: 'Cận cảnh chăn ga gối bằng vải linen tông màu trung tính',
@@ -133,11 +133,11 @@ export default [
     category: 'BẾP & PHÒNG ĂN',
     tag: 'Bếp & phòng ăn',
     title: 'Tối giản công năng cho gian bếp nhỏ',
-    excerpt: 'Một gian bếp nhỏ vẫn có thể đầy đủ công năng nếu được bố trí thông minh — đây là những nguyên tắc cốt lõi theo phong cách Scandinavian.',
+    excerpt: 'Một gian bếp nhỏ vẫn có thể đầy đủ công năng nếu được bố trí thông minh — đây là những nguyên tắc cốt lõi theo hướng đơn giản, hiện đại.',
     readTime: 'Đọc 4 phút',
     cover: '/images/cam-hung/bep-toi-gian.jpg',
-    coverAlt: 'Gian bếp tối giản phong cách Scandinavian',
-    intro: 'Bếp Scandinavian không chạy theo diện tích lớn, mà chạy theo sự hợp lý: mọi thứ đều có chỗ của nó, mặt bàn luôn thông thoáng, và vật liệu được chọn để dùng bền lâu.',
+    coverAlt: 'Gian bếp tối giản, gọn gàng, đủ công năng',
+    intro: 'Một gian bếp tiện nghi không chạy theo diện tích lớn, mà chạy theo sự hợp lý: mọi thứ đều có chỗ của nó, mặt bàn luôn thông thoáng, và vật liệu được chọn để dùng bền lâu.',
     sections: [
       {
         heading: 'Nguyên tắc "tam giác bếp"',
@@ -219,7 +219,7 @@ export default [
       },
       {
         heading: 'Ứng dụng vào nội thất',
-        body: `Ưu tiên nội thất từ mây tre đan, gỗ tự nhiên, vải cotton/linen thay vì nhựa hay kim loại công nghiệp — đây cũng là những vật liệu ${config.shopName} lựa chọn cho nhiều dòng sản phẩm. Kết hợp thêm chậu cây, ánh sáng tự nhiên và bề mặt đá tự nhiên để hoàn thiện không gian.`,
+        body: `Ưu tiên bề mặt vân gỗ, tông màu đất, vải cotton/linen thay vì nhựa hay kim loại bóng — nội thất ${config.shopName} dùng ván công nghiệp phủ Melamine vân gỗ để mang cảm giác tự nhiên vào nhà mà vẫn bền, an toàn cho sức khỏe. Kết hợp thêm chậu cây, ánh sáng tự nhiên và bề mặt đá tự nhiên để hoàn thiện không gian.`,
         image: '/images/cam-hung/biophilic-vat-lieu-tu-nhien.jpg',
         imageAlt: 'Nội thất mây tre đan kết hợp khung gỗ tự nhiên',
       },

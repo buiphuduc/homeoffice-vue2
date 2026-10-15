@@ -57,11 +57,11 @@ export default [
     sections: [
       {
         heading: 'Thông tin chúng tôi thu thập',
-        body: `${companyLine} Website hiện KHÔNG yêu cầu đăng ký tài khoản và không lưu trữ dữ liệu cá nhân trên máy chủ. Giỏ hàng và danh sách yêu thích của bạn chỉ được lưu cục bộ trên trình duyệt của chính bạn (localStorage), chúng tôi không truy cập hay nhìn thấy được dữ liệu này.`,
+        body: `${companyLine} Website hiện KHÔNG yêu cầu đăng ký tài khoản và không lưu trữ dữ liệu cá nhân trên máy chủ.`,
       },
       {
         heading: 'Thông tin bạn chủ động cung cấp',
-        body: 'Khi bạn điền form Liên hệ (họ tên, số điện thoại, email, nội dung nhắn), thông tin được gửi trực tiếp tới hộp thư Gmail của chúng tôi thông qua hệ thống tự vận hành trên Google Apps Script (không qua dịch vụ trung gian bên thứ ba); form Đặt hàng được gửi qua Zalo/Messenger của chúng tôi. Chúng tôi chỉ dùng thông tin này để liên hệ và xử lý yêu cầu/đơn hàng của chính bạn, không chia sẻ cho bên thứ ba vì mục đích khác.',
+        body: 'Khi bạn điền form Liên hệ (họ tên, số điện thoại, email, nội dung nhắn), thông tin được gửi trực tiếp tới hộp thư Gmail của chúng tôi; form Đặt hàng được gửi qua Zalo/Messenger của chúng tôi. Chúng tôi chỉ dùng thông tin này để liên hệ và xử lý yêu cầu/đơn hàng của chính bạn, không chia sẻ cho bên thứ ba vì mục đích khác.',
       },
       {
         heading: 'Cookie & công cụ theo dõi',

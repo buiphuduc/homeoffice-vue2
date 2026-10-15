@@ -20,8 +20,8 @@ import config from '@/config';
  * ------------------------------------------------------------------
  */
 
-const DEFAULT_TITLE = `${config.shopName} - Nội Thất Phong Cách Scandinavian`;
-const DEFAULT_DESCRIPTION = `${config.shopName} — nội thất phong cách Scandinavian tối giản: bàn ghế sofa, tủ kệ, phòng khách, phòng ngủ, bếp & phòng ăn, nội thất văn phòng. Giao hàng toàn quốc, bảo hành dài hạn.`;
+const DEFAULT_TITLE = `${config.shopName} - Nội Thất Ván Công Nghiệp Hiện Đại`;
+const DEFAULT_DESCRIPTION = `${config.shopName} (HTM Design & Build) — nội thất ván công nghiệp MDF Melamine, Plywood chuẩn E0/E1, CARB-P2 cho phòng khách, phòng ngủ, bếp & phòng ăn, phòng làm việc, văn phòng. Sản xuất bằng máy móc tự động hóa, chuẩn xác từng milimet.`;
 const DEFAULT_IMAGE = `${config.siteUrl}/images/banners/hero-banner.jpg`;
 
 function upsertMeta(attr, key, content) {

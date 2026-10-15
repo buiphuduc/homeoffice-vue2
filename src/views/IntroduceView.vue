@@ -7,7 +7,7 @@
         <div class="hero-card group">
           <img
             v-show="!heroBroken"
-            alt="Xưởng sản xuất nội thất HTMVN — không gian chế tác gỗ theo phong cách Bắc Âu tối giản"
+            alt="Không gian sống hiện đại, ấm cúng với nội thất ván công nghiệp tông gỗ sáng và trắng do HTM Design & Build thiết kế, thi công"
             class="hero-img"
             fetchpriority="high"
             src="/images/gioi-thieu/hero-gioi-thieu.webp"
@@ -18,9 +18,9 @@
           </div>
           <div class="hero-overlay" aria-hidden="true"></div>
           <div class="hero-content">
-            <p class="hero-eyebrow">{{ shopName }} · Câu chuyện thương hiệu</p>
-            <h1 id="intro-hero-title" class="hero-title">Tinh tế trong thiết kế.<br>Ấm áp trong từng không gian.</h1>
-            <p class="hero-description">Từ sự tỉ mỉ trong từng chi tiết đến tính tiện dụng mỗi ngày, HTM mang tinh thần tối giản và ấm áp vào không gian sống của bạn.</p>
+            <p class="hero-eyebrow">{{ brand }} · Về chúng tôi</p>
+            <h1 id="intro-hero-title" class="hero-title">Kiến tạo không gian.<br>Nuôi dưỡng tâm hồn.</h1>
+            <p class="hero-description">Ngôi nhà là chốn về bình yên, nơi tâm hồn được vỗ về và tái tạo năng lượng. HTM mang đến những không gian nội thất tiện nghi, hiện đại và phát huy tối đa giá trị sử dụng.</p>
             <router-link class="hero-cta" to="/danh-muc">Khám phá nội thất <span aria-hidden="true">→</span></router-link>
           </div>
         </div>
@@ -30,60 +30,56 @@
       <section class="container quote-section">
         <div class="quote-content">
           <h2 class="display-text text-primary">
-            "Thiết kế đẹp bắt đầu từ sự chính xác — nơi kỹ thuật gặp gỡ cảm xúc, và từng thớ gỗ được kể lại bằng một ngôn ngữ tối giản, ấm áp."
+            "Ngôi nhà giờ đây là chốn về bình yên, là nơi tâm hồn được vỗ về và tái tạo năng lượng sau những bộn bề cuộc sống."
           </h2>
           <p class="body-text text-variant mt-lg">
-            {{ shopName }} là thương hiệu nội thất trực thuộc {{ company.legalName }} — nơi tư duy kỹ thuật chính xác của một đơn vị gia công, lắp đặt lâu năm hội tụ cùng gu thẩm mỹ Bắc Âu tối giản. Chúng tôi tin rằng nội thất không chỉ để lấp đầy không gian, mà để tạo ra một chốn về mang đậm tinh thần Hygge: tĩnh lặng, đúng công năng và bền theo thời gian trong mọi tác phẩm, từ phòng khách, phòng ngủ đến không gian làm việc.
+            Trong nhịp sống ngày càng hiện đại, định nghĩa về một tổ ấm đã vươn xa hơn khái niệm của một nơi chỉ để ở. Thấu hiểu điều đó, {{ brand }} ra đời với sứ mệnh mang đến những giải pháp tối ưu nhất cho không gian sống của bạn. Chúng tôi không chỉ sắp xếp đồ đạc, mà kiến tạo nên những không gian nội thất tiện nghi, thoải mái, phát huy tối đa giá trị sử dụng.
           </p>
         </div>
       </section>
 
-      <!-- Timeline Section -->
+      <!-- Pillars Section -->
       <section class="container timeline-section">
         <div class="timeline-header">
-          <h2 class="headline-text text-surface">Hành trình của chúng tôi</h2>
+          <h2 class="headline-text text-surface">Điều làm nên HTM</h2>
         </div>
 
         <div class="timeline-grid">
-          <!-- Milestone 1 -->
           <div class="timeline-item group">
-            <div class="timeline-year text-primary">Giai đoạn 01</div>
-            <h3 class="timeline-title text-surface group-hover-primary">Nền tảng kỹ thuật</h3>
+            <div class="timeline-year text-primary">01 · Sứ mệnh</div>
+            <h3 class="timeline-title text-surface group-hover-primary">Không gian sống tối ưu</h3>
             <p class="timeline-desc text-variant">
-              Khởi nguồn từ đội ngũ kỹ thuật chuyên gia công, lắp đặt công trình — nền tảng tạo nên sự chính xác trong từng mối ghép nội thất sau này.
+              Giải pháp nội thất ván công nghiệp toàn diện, đáp ứng linh hoạt từ phân khúc bình dân đến cao cấp, cho phòng khách, phòng ngủ, bếp và không gian làm việc.
             </p>
           </div>
-          <!-- Milestone 2 -->
           <div class="timeline-item group">
-            <div class="timeline-year text-primary">Giai đoạn 02</div>
-            <h3 class="timeline-title text-surface group-hover-primary">Định hình phong cách</h3>
+            <div class="timeline-year text-primary">02 · Vật liệu</div>
+            <h3 class="timeline-title text-surface group-hover-primary">An toàn cho sức khỏe</h3>
             <p class="timeline-desc text-variant">
-              Phát triển dòng sản phẩm nội thất mang tinh thần Scandinavian: đường nét tối giản, vật liệu tự nhiên, ưu tiên sự tiện dụng lâu dài.
+              Vật liệu được tinh tuyển khắt khe: từ MDF phủ Melamine chống ẩm phổ thông đến Plywood, MDF tiêu chuẩn E0/E1, CARB-P2 thân thiện với môi trường.
             </p>
           </div>
-          <!-- Milestone 3 -->
           <div class="timeline-item group">
-            <div class="timeline-year text-primary">Giai đoạn 03</div>
-            <h3 class="timeline-title text-surface group-hover-primary">Mở rộng danh mục</h3>
+            <div class="timeline-year text-primary">03 · Công nghệ</div>
+            <h3 class="timeline-title text-surface group-hover-primary">Chuẩn xác từng milimet</h3>
             <p class="timeline-desc text-variant">
-              Phủ khắp các không gian sống: phòng khách, bếp & phòng ăn, phòng ngủ, phòng tắm, nội thất văn phòng, ngoài trời và cả các giải pháp kỹ thuật công trình.
+              Làm chủ công nghệ, ứng dụng tối đa hệ thống máy móc tự động hóa hiện đại để giảm thao tác thủ công, triệt tiêu sai số và nâng cao độ chính xác.
             </p>
           </div>
-          <!-- Milestone 4 -->
           <div class="timeline-item group">
-            <div class="timeline-year text-primary">Hiện tại</div>
-            <h3 class="timeline-title text-surface group-hover-primary">Đồng hành cùng khách hàng</h3>
+            <div class="timeline-year text-primary">04 · Cam kết</div>
+            <h3 class="timeline-title text-surface group-hover-primary">Đồng hành tin cậy</h3>
             <p class="timeline-desc text-variant">
-              {{ shopName }} phục vụ khách hàng trên toàn quốc qua nền tảng trực tuyến, với showroom tại {{ company.address }}.
+              Với triết lý làm nghề tận tâm, HTM hiện thực hóa ý tưởng của bạn thành không gian sống đơn giản, hiện đại, tiện nghi và mang đậm dấu ấn cá nhân.
             </p>
           </div>
         </div>
       </section>
 
-      <!-- Team / Craftsmanship Section -->
+      <!-- Materials / Technology Section -->
       <section class="container bento-section">
         <div class="bento-header">
-          <h2 class="headline-text text-surface bento-title">Bàn tay tài hoa đằng sau mỗi thiết kế</h2>
+          <h2 class="headline-text text-surface bento-title">Vật liệu an toàn, công nghệ chuẩn xác</h2>
           <router-link class="bento-link text-primary group" to="/danh-muc">
             Khám phá sản phẩm
             <span class="material-symbols-outlined bento-icon">arrow_forward</span>
@@ -95,34 +91,34 @@
           <div class="bento-card col-span-2 group">
             <img
               v-show="!bentoBroken.large"
-              alt="Đội ngũ kỹ thuật và thiết kế HTMVN trong xưởng chế tác nội thất"
+              alt="Dây chuyền máy móc tự động cắt và gia công ván công nghiệp tại xưởng sản xuất HTM"
               class="bento-img"
-              src="/images/gioi-thieu/xuong-thiet-ke.jpg"
+              src="/images/gioi-thieu/xuong-san-xuat-tu-dong.webp"
               @error="bentoBroken.large = true"
             />
             <div class="img-fallback" v-if="bentoBroken.large">
               <span class="material-symbols-outlined">photo_camera</span>
             </div>
             <div class="bento-overlay">
-              <p class="bento-tag text-on-primary">Xưởng thiết kế & kỹ thuật</p>
-              <p class="bento-desc text-on-primary-dim">Nơi bản vẽ kỹ thuật và ý tưởng thẩm mỹ gặp nhau — mỗi sản phẩm đều được tính toán về kết cấu trước khi thành hình.</p>
+              <p class="bento-tag text-on-primary">Xưởng sản xuất tự động hóa</p>
+              <p class="bento-desc text-on-primary-dim">Máy móc hiện đại thay thế thao tác thủ công, đảm bảo sự đồng đều, ổn định và độ tin cậy cho mọi sản phẩm trước khi đến tay khách hàng.</p>
             </div>
           </div>
 
           <!-- Secondary Image 1 -->
           <div class="bento-card group">
             <img
-              v-show="!bentoBroken.artisan"
-              alt="Người thợ đang hoàn thiện chi tiết đồ gỗ nội thất"
+              v-show="!bentoBroken.material"
+              alt="Các mẫu ván MDF phủ Melamine và Plywood tiêu chuẩn E0, E1, CARB-P2"
               class="bento-img"
-              src="/images/gioi-thieu/nghe-nhan-hoan-thien.jpg"
-              @error="bentoBroken.artisan = true"
+              src="/images/gioi-thieu/vat-lieu-van-cong-nghiep.webp"
+              @error="bentoBroken.material = true"
             />
-            <div class="img-fallback" v-if="bentoBroken.artisan">
+            <div class="img-fallback" v-if="bentoBroken.material">
               <span class="material-symbols-outlined">photo_camera</span>
             </div>
             <div class="bento-overlay-small">
-              <p class="bento-tag text-on-primary">Người thợ hoàn thiện</p>
+              <p class="bento-tag text-on-primary">Vật liệu tinh tuyển</p>
             </div>
           </div>
 
@@ -130,27 +126,51 @@
           <div class="bento-card group">
             <img
               v-show="!bentoBroken.detail"
-              alt="Cận cảnh mối ghép mộng gỗ tự nhiên"
+              alt="Cận cảnh cạnh ván dán chỉ chính xác, đồng đều trên bề mặt Melamine"
               class="bento-img"
-              src="/images/gioi-thieu/chi-tiet-moi-ghep.jpg"
+              src="/images/gioi-thieu/chi-tiet-dan-canh.webp"
               @error="bentoBroken.detail = true"
             />
             <div class="img-fallback" v-if="bentoBroken.detail">
               <span class="material-symbols-outlined">photo_camera</span>
             </div>
             <div class="bento-overlay-small">
-              <p class="bento-tag text-on-primary">Chi tiết mối ghép</p>
+              <p class="bento-tag text-on-primary">Chính xác từng milimet</p>
             </div>
           </div>
 
           <!-- Text Card -->
           <div class="bento-text-card col-span-2">
-            <h3 class="bento-text-title text-on-secondary">Sự tỉ mỉ trong từng thớ gỗ</h3>
+            <h3 class="bento-text-title text-on-secondary">Đa dạng phân khúc, an tâm về sức khỏe</h3>
             <p class="bento-text-desc text-on-secondary-variant">
-              Mỗi đường cong, mỗi mối ghép không chỉ là kỹ thuật, mà là sự tôn trọng đối với vật liệu. Chúng tôi tuyển chọn kỹ càng từ gỗ sồi tự nhiên nguyên khối, gỗ tự nhiên phủ veneer sơn PU, đến gỗ công nghiệp MDF/MFC phủ Melamine hay Laminate chống ẩm — kết hợp cùng khung thép sơn tĩnh điện, mặt kính cường lực hay đá Quartz nhân tạo cho từng dòng sản phẩm phù hợp. Nhờ vậy, theo thời gian sản phẩm không chỉ bền bỉ mà còn mang dấu ấn riêng của gia chủ.
+              Từ dòng ván MDF phủ Melamine chống ẩm phổ thông, mang lại độ bền bỉ và tính kinh tế cao, đến các dòng vật liệu cao cấp như Plywood, MDF tiêu chuẩn E0/E1, CARB-P2 — thân thiện với môi trường và đặc biệt an toàn cho sức khỏe của mọi thành viên trong gia đình.
             </p>
           </div>
         </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="container intro-contact" aria-labelledby="intro-contact-title">
+        <h2 id="intro-contact-title" class="headline-text text-surface">{{ brand }}</h2>
+        <p class="body-text text-variant">Chúng tôi luôn mong muốn trở thành người bạn đồng hành tin cậy của quý khách hàng.</p>
+        <dl class="intro-contact-list">
+          <div>
+            <dt class="text-primary">Văn phòng</dt>
+            <dd class="text-variant">{{ company.address }}</dd>
+          </div>
+          <div>
+            <dt class="text-primary">Xưởng sản xuất</dt>
+            <dd class="text-variant">{{ company.workshopAddress }}</dd>
+          </div>
+          <div>
+            <dt class="text-primary">Hotline</dt>
+            <dd><a class="text-variant" :href="'tel:' + company.phoneTel">{{ company.phoneDisplay }}</a></dd>
+          </div>
+          <div>
+            <dt class="text-primary">Email</dt>
+            <dd><a class="text-variant" :href="'mailto:' + company.email">{{ company.email }}</a></dd>
+          </div>
+        </dl>
       </section>
     </main>
   </div>
@@ -166,9 +186,9 @@ import siteContent from '@/content/siteContent';
  * Trang Giới thiệu — GIỮ NGUYÊN bố cục & hiệu ứng CSS gốc (hero zoom
  * hover, bento grid zoom hover, mũi tên trượt khi hover link...), chỉ
  * thay nội dung chữ cho đúng với thương hiệu thật ({{ shopName }} /
- * {{ company.legalName }}) và thay ảnh demo (link Google AIDA) bằng
- * đường dẫn ảnh cục bộ — xem prompt tạo ảnh AI tương ứng ở phần trả lời
- * kèm theo, đặt file đúng tên vào public/images/gioi-thieu/.
+ * {{ company.legalName }}) và dùng ảnh cục bộ trong public/images/gioi-thieu/:
+ * hero-gioi-thieu.webp, xuong-san-xuat-tu-dong.jpg,
+ * vat-lieu-van-cong-nghiep.jpg, chi-tiet-dan-canh.jpg.
  *
  * Nếu ảnh thật chưa có/lỗi 404, tự động hiện icon placeholder thay vì
  * icon "ảnh vỡ" xấu xí (cùng cách xử lý với ProductGallery.vue).
@@ -179,11 +199,12 @@ export default {
   data() {
     return {
       shopName: config.shopName,
+      brand: 'HTM Design & Build',
       company: siteContent.companyInfo,
       heroBroken: false,
       heroOffset: 130,
       viewportWidth: null,
-      bentoBroken: { large: false, artisan: false, detail: false },
+      bentoBroken: { large: false, material: false, detail: false },
     };
   },
   computed: {
@@ -671,5 +692,34 @@ methods: {
   .col-span-2 {
     grid-column: span 2 / span 2;
   }
+}
+
+/* Contact Section */
+.intro-contact {
+  padding-top: 24px;
+  padding-bottom: 80px;
+}
+.intro-contact .body-text { margin: 8px 0 32px; }
+.intro-contact-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin: 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--outline-variant);
+}
+.intro-contact-list dt {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.intro-contact-list dd { margin: 0; }
+.intro-contact-list a { text-decoration: none; }
+.intro-contact-list a:hover { color: var(--primary-color); }
+@media (min-width: 768px) {
+  .intro-contact-list { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
