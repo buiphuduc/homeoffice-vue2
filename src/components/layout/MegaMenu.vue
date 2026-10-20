@@ -41,6 +41,11 @@
             </li>
           </ul>
         </li>
+
+        <!-- Mục cố định: Dự án đã thi công -->
+        <li class="nav-item">
+          <router-link to="/du-an" @click.native="handleLinkClick">Dự án</router-link>
+        </li>
       </ul>
     </div>
   </nav>

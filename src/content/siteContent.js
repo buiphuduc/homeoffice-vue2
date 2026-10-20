@@ -229,7 +229,7 @@ export default {
     phoneDisplay: config.hotlineDisplay,
     phoneTel: config.hotlineTel,
     // Chuỗi địa chỉ dùng để nhúng Google Maps (không cần API key).
-    mapQuery: '354/47/12/57 Quốc lộ 1A, Phường Bình Tân, Hồ Chí Minh, Việt Nam',
+    mapQuery: 'Công ty TNHH Kỹ Thuật HTM',
   },
 
   footerColumns: [
@@ -246,7 +246,7 @@ export default {
         { text: 'Giới thiệu', link: '/gioi-thieu' },
         { text: 'Liên hệ', link: '/lien-he' },
         { text: 'Tuyển dụng' },
-        { text: 'Dự án đã thi công' },
+        { text: 'Dự án đã thi công', link: '/du-an'},
         { text: 'Cảm hứng sáng tạo', link: '/cam-hung-sang-tao' },
       ],
     },

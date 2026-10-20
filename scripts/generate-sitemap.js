@@ -40,6 +40,9 @@ const INSPIRATION_SLUGS = [
   'xu-huong-biophilic-design',
 ];
 
+// Giữ đồng bộ tay với slug thật trong src/content/projects.js
+const PROJECT_SLUGS = ['ka-house', 'p-house', 't-house'];
+
 // Giữ đồng bộ tay với slug thật trong src/content/legalPages.js
 const LEGAL_SLUGS = ['doi-tra', 'bao-mat', 'dieu-khoan', 'van-chuyen', 'bao-hanh'];
 
@@ -49,6 +52,7 @@ const STATIC_PATHS = [
   { path: '/gioi-thieu', changefreq: 'monthly', priority: '0.6' },
   { path: '/lien-he', changefreq: 'monthly', priority: '0.5' },
   { path: '/cam-hung-sang-tao', changefreq: 'weekly', priority: '0.7' },
+  { path: '/du-an', changefreq: 'weekly', priority: '0.8' },
 ];
 
 function xmlEscape(str) {
@@ -66,6 +70,10 @@ function main() {
 
   STATIC_PATHS.forEach((s) => {
     entries.push(urlEntry(`${SITE_URL}${s.path}`, { changefreq: s.changefreq, priority: s.priority }));
+  });
+
+  PROJECT_SLUGS.forEach((slug) => {
+    entries.push(urlEntry(`${SITE_URL}/du-an/${slug}`, { changefreq: 'monthly', priority: '0.7' }));
   });
 
   INSPIRATION_SLUGS.forEach((slug) => {

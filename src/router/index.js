@@ -102,6 +102,18 @@ const routes = [
     props: true,
   },
   {
+    path: '/du-an',
+    name: 'projects',
+    component: () => import(/* webpackChunkName: "projects" */ '@/views/ProjectsView.vue'),
+    meta: { title: 'Dự án đã thi công', description: 'Các dự án nội thất HTM Design & Build đã thi công: hình ảnh thực tế theo từng không gian, vật liệu ván công nghiệp an toàn, sản xuất chuẩn xác từng milimet.' },
+  },
+  {
+    path: '/du-an/:slug',
+    name: 'project-detail',
+    component: () => import(/* webpackChunkName: "project-detail" */ '@/views/ProjectDetailView.vue'),
+    props: true,
+  },
+  {
     path: '/chinh-sach/:slug',
     name: 'legal-page',
     component: () => import(/* webpackChunkName: "legal-page" */ '@/views/LegalPageView.vue'),

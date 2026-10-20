@@ -129,6 +129,17 @@
       </div>
     </div>
 
+    <!-- ===== DỰ ÁN ĐÃ THI CÔNG ===== -->
+    <template v-if="homeProjects.length">
+      <div class="section-title" v-reveal>
+        <h2>Dự án đã thi công</h2>
+        <router-link class="see-all" to="/du-an">Xem tất cả</router-link>
+      </div>
+      <div class="home-projects" v-reveal="80">
+        <project-card v-for="p in homeProjects" :key="p.slug" :project="p"></project-card>
+      </div>
+    </template>
+
     <!-- ===== TỪNG KHỐI SẢN PHẨM THEO NGÀNH HÀNG (lặp lại cho mỗi danh mục cấp 1) ===== -->
     <template v-for="cat in topCategories">
       <div class="section-title" :key="'st-' + cat" v-reveal>
@@ -173,6 +184,8 @@
 import { mapState, mapGetters } from 'vuex';
 import ProductGrid from '@/components/product/ProductGrid.vue';
 import QuickViewModal from '@/components/product/QuickViewModal.vue';
+import ProjectCard from '@/components/project/ProjectCard.vue';
+import { getAllProjects } from '@/utils/projects';
 import productActionsMixin from '@/mixins/productActions';
 import config from '@/config';
 import siteContent from '@/content/siteContent';
@@ -253,7 +266,9 @@ const HeroTimeControls = {
  */
 export default {
   name: 'HomeView',
-  components: { ProductGrid, QuickViewModal, HeroTimeControls },
+  components: {
+    ProductGrid, QuickViewModal, HeroTimeControls, ProjectCard,
+  },
   mixins: [productActionsMixin],
   data() {
     return {
@@ -283,6 +298,11 @@ export default {
     };
   },
   computed: {
+    // 3 dự án hiển thị ở trang chủ: ưu tiên dự án nổi bật (featured), rồi theo thứ tự khai báo
+    homeProjects() {
+      const all = getAllProjects();
+      return all.filter((p) => p.featured).concat(all.filter((p) => !p.featured)).slice(0, 3);
+    },
     ...mapState('products', { loading: (state) => state.loading }),
     ...mapGetters('products', ['all', 'topCategories']),
 
@@ -444,3 +464,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Khối "Dự án đã thi công" ở trang chủ */
+.home-projects { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 640px) { .home-projects { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .home-projects { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+</style>
