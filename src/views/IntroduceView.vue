@@ -93,7 +93,7 @@
               v-show="!bentoBroken.large"
               alt="Dây chuyền máy móc tự động cắt và gia công ván công nghiệp tại xưởng sản xuất HTM"
               class="bento-img"
-              src="/images/gioi-thieu/xuong-san-xuat-tu-dong.webp"
+              src="/images/gioi-thieu/xuong-san-xuat-tu-dong.jpg"
               @error="bentoBroken.large = true"
             />
             <div class="img-fallback" v-if="bentoBroken.large">
@@ -111,7 +111,7 @@
               v-show="!bentoBroken.material"
               alt="Các mẫu ván MDF phủ Melamine và Plywood tiêu chuẩn E0, E1, CARB-P2"
               class="bento-img"
-              src="/images/gioi-thieu/vat-lieu-van-cong-nghiep.webp"
+              src="/images/gioi-thieu/vat-lieu-van-cong-nghiep.jpg"
               @error="bentoBroken.material = true"
             />
             <div class="img-fallback" v-if="bentoBroken.material">
@@ -128,7 +128,7 @@
               v-show="!bentoBroken.detail"
               alt="Cận cảnh cạnh ván dán chỉ chính xác, đồng đều trên bề mặt Melamine"
               class="bento-img"
-              src="/images/gioi-thieu/chi-tiet-dan-canh.webp"
+              src="/images/gioi-thieu/chi-tiet-dan-canh.jpg"
               @error="bentoBroken.detail = true"
             />
             <div class="img-fallback" v-if="bentoBroken.detail">

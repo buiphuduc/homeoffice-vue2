@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <toast-container></toast-container>
-    <app-header></app-header>
+    <app-header v-if="!isAdmin"></app-header>
 
-    <div class="container">
+    <router-view v-if="isAdmin"></router-view>
+
+    <div class="container" v-else>
       <div v-if="configWarning" class="config-warning">
         <i class="fa-solid fa-triangle-exclamation"></i> {{ configWarning }}
       </div>
@@ -15,8 +17,8 @@
       <router-view></router-view>
     </div>
 
-    <app-footer></app-footer>
-    <floating-actions></floating-actions>
+    <app-footer v-if="!isAdmin"></app-footer>
+    <floating-actions v-if="!isAdmin"></floating-actions>
   </div>
 </template>
 
@@ -39,6 +41,10 @@ export default {
   name: 'App',
   components: { AppHeader, AppFooter, ToastContainer, FloatingActions },
   computed: {
+    // Trang quản trị (/admin) có khung riêng, không dùng header/footer của website
+    isAdmin() {
+      return !!(this.$route.meta && this.$route.meta.admin);
+    },
     ...mapState('products', { loadError: (state) => state.error }),
     configWarning() {
       if (!config.sheetCsvUrl) {
@@ -48,6 +54,8 @@ export default {
     },
   },
   async created() {
+    // 0. Tải dự án (không chờ) — các trang Dự án/Trang chủ sẽ tự cập nhật khi xong
+    this.$store.dispatch('projects/fetch');
     // 1. Tải sản phẩm từ Google Sheet trước
     await this.$store.dispatch('products/fetchProducts');
     // 2. Sau khi CÓ sản phẩm rồi mới khôi phục giỏ hàng đã lưu (cần đối

@@ -114,6 +114,13 @@ const routes = [
     props: true,
   },
   {
+    // Trang quản trị: thêm/sửa/xóa sản phẩm & dự án (không hiện trên menu, không index)
+    path: '/admin/:tab(san-pham|du-an|tai-khoan|cong-cu)?',
+    name: 'admin',
+    component: () => import(/* webpackChunkName: "admin" */ '@/views/AdminView.vue'),
+    meta: { title: 'Quản trị', admin: true },
+  },
+  {
     path: '/chinh-sach/:slug',
     name: 'legal-page',
     component: () => import(/* webpackChunkName: "legal-page" */ '@/views/LegalPageView.vue'),

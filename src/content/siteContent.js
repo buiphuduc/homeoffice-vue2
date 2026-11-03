@@ -122,6 +122,20 @@ export default {
    * Danh mục nào không có banner ở đây sẽ tự động rơi về hiển thị dạng
    * icon tròn đơn giản (không lỗi, không cần khai báo đủ hết).
    */
+  /**
+   * THỨ TỰ DANH MỤC CẤP 1 (menu, trang chủ, bộ lọc, chân trang): danh mục nào có tên trong
+   * danh sách này sẽ đứng đầu theo đúng thứ tự dưới đây; các danh mục còn lại xếp sau theo A-Z.
+   * Tên không phân biệt hoa/thường, dấu, dấu "&". Một dòng có thể ghi nhiều cách gọi,
+   * cách nhau bằng dấu "|" (vd: 'Bếp & Phòng Ăn | Phòng Bếp'). Muốn đổi thứ tự: chỉ cần sửa danh sách này.
+   */
+  categoryOrder: [
+    'Phòng Ngủ',
+    'Phòng Khách',
+    'Bếp & Phòng Ăn | Phòng Bếp',
+    'Phòng Làm Việc',
+    'Nội Thất Văn Phòng',
+  ],
+
   categoryBanners: {
     'Nội thất văn phòng': '/images/banners/noi-that-van-phong.webp',
     'Phòng Khách': '/images/banners/phong-khach.webp',
@@ -229,7 +243,7 @@ export default {
     phoneDisplay: config.hotlineDisplay,
     phoneTel: config.hotlineTel,
     // Chuỗi địa chỉ dùng để nhúng Google Maps (không cần API key).
-    mapQuery: 'Công ty TNHH Kỹ Thuật HTM',
+    mapQuery: '354/47/12/57 Quốc lộ 1A, Phường Bình Tân, Hồ Chí Minh, Việt Nam',
   },
 
   footerColumns: [
@@ -246,7 +260,7 @@ export default {
         { text: 'Giới thiệu', link: '/gioi-thieu' },
         { text: 'Liên hệ', link: '/lien-he' },
         { text: 'Tuyển dụng' },
-        { text: 'Dự án đã thi công', link: '/du-an'},
+        { text: 'Dự án đã thi công' },
         { text: 'Cảm hứng sáng tạo', link: '/cam-hung-sang-tao' },
       ],
     },

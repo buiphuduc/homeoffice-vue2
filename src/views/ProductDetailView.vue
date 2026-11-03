@@ -51,7 +51,7 @@
                 :key="c.name"
                 class="color-swatch"
                 :class="{ active: selectedColor && selectedColor.name === c.name }"
-                :style="{ backgroundColor: getColorCode(c.name) }"
+                :style="swatchStyle(c.name, c.image)"
                 :title="c.name"
                 @click="selectedColor = c"
               ></button>
@@ -167,6 +167,7 @@
 </template>
 
 <script>
+import { swatchStyle } from '@/utils/color';
 import { mapState, mapGetters } from 'vuex';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
@@ -302,20 +303,7 @@ export default {
       this.handleAddToCart(this.product, this.qty, this.selectedColor);
       this.$router.push({ name: 'checkout' });
     },
-    getColorCode(colorName) {
-      if (!colorName) return '#DDDDDD';
-      const name = colorName.toLowerCase();
-      const colorMap = {
-        'trắng': '#F8F8F8', 'màu trắng': '#F8F8F8',
-        'be': '#E5DDD5', 'màu be': '#E5DDD5',
-        'xám nhạt': '#C3C1BD', 'màu xám nhạt': '#C3C1BD',
-        'xám đậm': '#353331', 'màu xám đậm': '#353331',
-        'vân gỗ sồi': '#D2B48C', 'màu vân gỗ sồi': '#D2B48C',
-        'xám ghi': '#808080', 'màu xám ghi': '#808080',
-        'đen': '#1a1a1a', 'màu đen': '#1a1a1a'
-      };
-      return colorMap[name] || '#DDDDDD';
-    }
+    swatchStyle,
   },
 };
 </script>

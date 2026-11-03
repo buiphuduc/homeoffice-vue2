@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import products from './modules/products';
+import projects from './modules/projects';
 import cart from './modules/cart';
 import wishlist from './modules/wishlist';
 import toast from './modules/toast';
@@ -23,6 +24,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     products,
+    projects,
     cart,
     wishlist,
     toast,

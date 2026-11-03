@@ -47,17 +47,12 @@ server đặc biệt nào ở phía hosting, vì đây là site tĩnh hoàn toà
 dấu `#`): cần cấu hình hosting để mọi đường dẫn đều trả về `index.html`
 (gọi là "fallback" hoặc "rewrite rule"). Cách làm cho từng nơi phổ biến:
 - **Netlify**: tạo file `dist/_redirects` với nội dung `/* /index.html 200`
-- **Hostinger (Apache)**: tạo file `dist/.htaccess` với nội dung:
-  ```
-  <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^index\.html$ - [L]
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule . /index.html [L]
-  </IfModule>
-  ```
+- **Hostinger (Apache/LiteSpeed)**: file `public/.htaccess` (đã có sẵn trong dự án) sẽ
+  TỰ ĐƯỢC COPY vào `dist/` khi build — gồm luật chuyển mọi đường dẫn về `index.html`,
+  nén file và cache. Khi upload lên `public_html`, nhớ bật hiển thị file ẩn (dotfiles)
+  để thấy và upload cả file `.htaccess`.
+  **Khi upload lại website, KHÔNG xóa** thư mục `uploads/` (ảnh do admin tải lên) và file
+  `api/config.php` (thông tin MySQL) — chỉ upload đè các file mới.
 - **Vercel**: tự động nhận diện dự án Vue, không cần cấu hình thêm
 
 ## 3. Cách lấy link Google Sheet CSV (nguồn dữ liệu sản phẩm)

@@ -12,6 +12,11 @@
 export default {
   shopName: process.env.VUE_APP_SHOP_NAME || 'HTMVN Shop',
   sheetCsvUrl: process.env.VUE_APP_SHEET_CSV_URL || '',
+  // API quản trị chạy ngay trên hosting (thư mục public/api: PHP + MySQL) — thêm/sửa/xóa
+  // sản phẩm & dự án mà không cần build lại. Mặc định bản build production dùng '/api';
+  // khi chạy `npm run serve` trên máy cá nhân (không có PHP) mặc định tắt, website dùng
+  // dữ liệu tĩnh (products.csv, src/content/projects.js). Có thể đặt VUE_APP_API_URL để đổi.
+  apiUrl: process.env.VUE_APP_API_URL || (process.env.NODE_ENV === 'production' ? '/api' : ''),
   zaloPhone: process.env.VUE_APP_ZALO_PHONE || '',
   messengerUsername: process.env.VUE_APP_MESSENGER_USERNAME || '',
   hotlineDisplay: process.env.VUE_APP_HOTLINE_DISPLAY || '',

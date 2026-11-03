@@ -35,7 +35,9 @@
       >{{ t }}</button>
     </div>
 
-    <div ref="grid" class="pv-grid" v-if="pageItems.length">
+    <loading-spinner v-if="!loaded" text="Đang tải dự án..."></loading-spinner>
+
+    <div ref="grid" class="pv-grid" v-else-if="pageItems.length">
       <project-card v-for="p in pageItems" :key="p.slug" :project="p"></project-card>
     </div>
 
@@ -84,7 +86,9 @@
 import ProjectCard from '@/components/project/ProjectCard.vue';
 import ProjectCta from '@/components/project/ProjectCta.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
-import { getAllProjects, projectTypes, filterProjects } from '@/utils/projects';
+import { mapGetters } from 'vuex';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import { projectTypes, filterProjects } from '@/utils/projects';
 
 const PAGE_SIZE = 9;
 
@@ -95,14 +99,16 @@ const PAGE_SIZE = 9;
  */
 export default {
   name: 'ProjectsView',
-  components: { ProjectCard, ProjectCta, EmptyState },
+  components: {
+    ProjectCard, ProjectCta, EmptyState, LoadingSpinner,
+  },
   data() {
     return { query: '', type: '' };
   },
   computed: {
-    allProjects() { return getAllProjects(); },
-    types() { return projectTypes(); },
-    filtered() { return filterProjects({ type: this.type, query: this.query }); },
+    ...mapGetters('projects', { allProjects: 'all', loaded: 'loaded' }),
+    types() { return projectTypes(this.allProjects); },
+    filtered() { return filterProjects(this.allProjects, { type: this.type, query: this.query }); },
     pageCount() { return Math.max(1, Math.ceil(this.filtered.length / PAGE_SIZE)); },
     page() {
       const n = parseInt(this.$route.query.page, 10);
@@ -113,6 +119,9 @@ export default {
       const start = (this.page - 1) * PAGE_SIZE;
       return this.filtered.slice(start, start + PAGE_SIZE);
     },
+  },
+  created() {
+    this.$store.dispatch('projects/fetch');
   },
   watch: {
     query() { this.resetPage(); },

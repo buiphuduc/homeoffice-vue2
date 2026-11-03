@@ -18,7 +18,7 @@ export function formatVND(amount) {
   const n = Number(amount) || 0;
   // Chưa có giá (ô giá trong CSV để trống / bằng 0) -> hiển thị "Liên hệ".
   // Khi nào có giá, chỉ cần điền "Regular price" trong products.csv.
-  if (n <= 0) return 'Giá: Liên hệ';
+  if (n <= 0) return 'Liên hệ';
   // \u00A0 = dấu cách KHÔNG ngắt dòng: chữ "đ" luôn dính liền số tiền, không bị rớt xuống dòng riêng
   return `${Math.round(n).toLocaleString('vi-VN')}\u00A0đ`;
 }

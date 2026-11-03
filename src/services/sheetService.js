@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Papa from 'papaparse';
 import config from '@/config';
+import * as sb from '@/services/api';
 import { parseVNDNumber } from '@/utils/format';
 
 /**
@@ -39,7 +40,7 @@ function parseColors(raw) {
     });
 }
 
-function mapCsvRowToProduct(row, index) {
+export function mapCsvRowToProduct(row, index) {
   const price = parseVNDNumber(row['Regular price']);
   const sale = parseVNDNumber(row['Sale price']);
   const categoriesRaw = (row['Categories'] || '').trim();
@@ -70,7 +71,9 @@ function mapCsvRowToProduct(row, index) {
     colors: parseColors(row['Colors']),
     shortDesc: (row['Short description'] || '').trim(),
     desc: (row['Description'] || '').trim(),
-    inStock: (row['In stock?'] || 'instock').trim().toLowerCase() !== 'outofstock',
+    // Cột có thể là "In stock?" (mẫu cũ) hoặc "In stock" (Yes/No); trống = còn hàng
+    inStock: !['no', 'outofstock', '0', 'false', 'het hang', 'hết hàng']
+      .includes(String(row['In stock?'] || row['In stock'] || 'yes').trim().toLowerCase()),
     published: String(row['Published']).trim().toLowerCase() === 'yes',
   };
 }
@@ -84,6 +87,22 @@ export default {
    * báo phù hợp, KHÔNG để lỗi rơi tự do làm vỡ giao diện.
    */
   async fetchProducts() {
+    // Ưu tiên dữ liệu trong CSDL (do admin quản lý ở /admin). Nếu chưa cấu hình,
+    // bảng còn trống hoặc đọc lỗi -> dùng file CSV như trước để shop không bao giờ trống.
+    if (sb.isConfigured()) {
+      try {
+        const rows = await sb.select('products', { columns: 'sku,data,sort_order', order: 'sort_order.asc' });
+        if (rows && rows.length) {
+          return rows
+            .map((r, i) => mapCsvRowToProduct({ ...(r.data || {}), SKU: r.sku }, i))
+            .filter((p) => p.name);
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('[HTM] Không đọc được sản phẩm từ API, dùng file CSV:', err.message);
+      }
+    }
+
     if (!config.sheetCsvUrl) {
       throw new Error('Chưa cấu hình VUE_APP_SHEET_CSV_URL trong file .env');
     }

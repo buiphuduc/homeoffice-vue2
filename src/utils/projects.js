@@ -1,16 +1,13 @@
-import { projects, projectSpaces } from '@/content/projects';
+import { projectSpaces } from '@/content/projects';
 
 /**
  * src/utils/projects.js
  * Hàm hỗ trợ cho mục Dự án (lọc, tìm, đếm ảnh, dự án liên quan...).
+ * Danh sách dự án (`list`) lấy từ Vuex: this.$store.getters['projects/all'].
  */
 
-export function getAllProjects() {
-  return projects;
-}
-
-export function getProjectBySlug(slug) {
-  return projects.find((p) => p.slug === slug) || null;
+export function getProjectBySlug(list, slug) {
+  return list.find((p) => p.slug === slug) || null;
 }
 
 export function spaceLabel(key) {
@@ -48,16 +45,16 @@ export function getSpaceList(project) {
 }
 
 /** Danh sách loại hình duy nhất (dùng sinh chip lọc). */
-export function projectTypes() {
+export function projectTypes(list) {
   const set = [];
-  projects.forEach((p) => { if (p.type && set.indexOf(p.type) === -1) set.push(p.type); });
+  list.forEach((p) => { if (p.type && set.indexOf(p.type) === -1) set.push(p.type); });
   return set;
 }
 
 /** Lọc theo loại hình + từ khóa (tên, địa điểm, loại hình, phong cách). */
-export function filterProjects({ type = '', query = '' } = {}) {
+export function filterProjects(list, { type = '', query = '' } = {}) {
   const q = query.trim().toLowerCase();
-  return projects.filter((p) => {
+  return list.filter((p) => {
     if (type && p.type !== type) return false;
     if (!q) return true;
     return [p.name, p.subtitle, p.title, p.location, p.type, p.style]
@@ -67,8 +64,8 @@ export function filterProjects({ type = '', query = '' } = {}) {
 }
 
 /** Dự án liên quan: ưu tiên cùng loại hình, bỏ chính nó, lấy tối đa n. */
-export function getRelatedProjects(project, n = 3) {
-  const others = projects.filter((p) => p.slug !== project.slug);
+export function getRelatedProjects(list, project, n = 3) {
+  const others = list.filter((p) => p.slug !== project.slug);
   const same = others.filter((p) => p.type && p.type === project.type);
   const rest = others.filter((p) => !(p.type && p.type === project.type));
   return same.concat(rest).slice(0, n);

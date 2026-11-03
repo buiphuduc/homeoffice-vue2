@@ -64,7 +64,8 @@
       </button>
     </section>
 
-    <!-- ===== DANH MỤC NỔI BẬT (lưới ảnh thật, lấy từ dữ liệu sản phẩm) ===== -->
+    <!-- ===== DANH MỤC NỔI BẬT (đang tạm tắt — mở lại bằng cách xóa dấu comment bao quanh) ===== -->
+    <!--
     <div class="section-title" v-if="featuredSubcategories.length" v-reveal>
       <h2>Danh mục nổi bật</h2>
     </div>
@@ -82,6 +83,7 @@
         <div class="cpc-label">{{ fc.label }}</div>
       </router-link>
     </div>
+    -->
 
     <!-- ===== DẢI BANNER KHUYẾN MÃI ===== -->
     <!-- <div class="promo-strip">
@@ -100,7 +102,8 @@
       </router-link>
     </div> -->
 
-    <!-- ===== MẪU MỚI ===== -->
+    <!-- ===== MẪU MỚI (đang tạm tắt — mở lại bằng cách xóa dấu comment bao quanh) ===== -->
+    <!--
     <div class="section-title" v-reveal>
       <h2>Mẫu mới</h2>
       <router-link class="see-all" to="/danh-muc">Xem tất cả</router-link>
@@ -114,22 +117,10 @@
       @wish="handleToggleWishlist"
       @quick-view="handleOpenQuickView"
     ></product-grid>
+    -->
 
-    <!-- ===== 4 TÍNH NĂNG NỔI BẬT ===== -->
-    <div class="section-title" v-reveal>
-      <h2>Vì sao chọn {{ shopName }}</h2>
-    </div>
-    <div class="feature-highlights" v-reveal="80">
-      <div class="feature-item" v-for="f in content.featureHighlights" :key="f.number">
-        <div class="fi-num">{{ f.number }}</div>
-        <div>
-          <h4>{{ f.title }}</h4>
-          <p>{{ f.desc }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== DỰ ÁN ĐÃ THI CÔNG ===== -->
+    <!-- ===== DỰ ÁN ĐÃ THI CÔNG (đang tạm tắt ở trang chủ — mở lại bằng cách xóa dấu comment bao quanh) ===== -->
+    <!--
     <template v-if="homeProjects.length">
       <div class="section-title" v-reveal>
         <h2>Dự án đã thi công</h2>
@@ -139,6 +130,7 @@
         <project-card v-for="p in homeProjects" :key="p.slug" :project="p"></project-card>
       </div>
     </template>
+    -->
 
     <!-- ===== TỪNG KHỐI SẢN PHẨM THEO NGÀNH HÀNG (lặp lại cho mỗi danh mục cấp 1) ===== -->
     <template v-for="cat in topCategories">
@@ -176,6 +168,20 @@
       ></product-grid>
     </template>
 
+    <!-- ===== VÌ SAO CHỌN HTM (đặt cuối trang) ===== -->
+    <div class="section-title" v-reveal>
+      <h2>Vì sao chọn {{ shopName }}</h2>
+    </div>
+    <div class="feature-highlights" v-reveal="80">
+      <div class="feature-item" v-for="f in content.featureHighlights" :key="f.number">
+        <div class="fi-num">{{ f.number }}</div>
+        <div>
+          <h4>{{ f.title }}</h4>
+          <p>{{ f.desc }}</p>
+        </div>
+      </div>
+    </div>
+
     <quick-view-modal :product="quickViewProduct" @close="handleCloseQuickView" @add-to-cart="handleAddToCart"></quick-view-modal>
   </div>
 </template>
@@ -185,7 +191,6 @@ import { mapState, mapGetters } from 'vuex';
 import ProductGrid from '@/components/product/ProductGrid.vue';
 import QuickViewModal from '@/components/product/QuickViewModal.vue';
 import ProjectCard from '@/components/project/ProjectCard.vue';
-import { getAllProjects } from '@/utils/projects';
 import productActionsMixin from '@/mixins/productActions';
 import config from '@/config';
 import siteContent from '@/content/siteContent';
@@ -300,7 +305,8 @@ export default {
   computed: {
     // 3 dự án hiển thị ở trang chủ: ưu tiên dự án nổi bật (featured), rồi theo thứ tự khai báo
     homeProjects() {
-      const all = getAllProjects();
+      // Phòng khi dữ liệu dự án chưa sẵn sàng: không để lỗi này làm trống cả trang chủ
+      const all = (this.$store.getters && this.$store.getters['projects/all']) || [];
       return all.filter((p) => p.featured).concat(all.filter((p) => !p.featured)).slice(0, 3);
     },
     ...mapState('products', { loading: (state) => state.loading }),

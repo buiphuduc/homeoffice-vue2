@@ -171,6 +171,8 @@
     </nav>
   </div>
 
+  <loading-spinner v-else-if="!loaded" text="Đang tải dự án..."></loading-spinner>
+
   <div v-else>
     <empty-state icon="fa-solid fa-house-chimney" text="Không tìm thấy dự án này.">
       <router-link to="/du-an" class="btn btn-outline">Xem tất cả dự án</router-link>
@@ -188,6 +190,7 @@ import ProjectSpaceGallery from '@/components/project/ProjectSpaceGallery.vue';
 import config from '@/config';
 import { setPageMeta } from '@/utils/seo';
 import { formatVND } from '@/utils/format';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import {
   getProjectBySlug, getSpaceList, getRelatedProjects, countImages,
 } from '@/utils/projects';
@@ -202,7 +205,7 @@ import {
 export default {
   name: 'ProjectDetailView',
   components: {
-    SafeImage, EmptyState, ProjectCard, ProjectCta, ProjectSpaceGallery,
+    SafeImage, EmptyState, ProjectCard, ProjectCta, ProjectSpaceGallery, LoadingSpinner,
   },
   props: {
     slug: { type: String, required: true },
@@ -216,10 +219,11 @@ export default {
   },
   computed: {
     ...mapGetters('products', ['all']),
-    project() { return getProjectBySlug(this.slug); },
+    ...mapGetters('projects', { projectList: 'all', loaded: 'loaded' }),
+    project() { return getProjectBySlug(this.projectList, this.slug); },
     spaces() { return this.project ? getSpaceList(this.project) : []; },
     totalImages() { return this.project ? countImages(this.project) : 0; },
-    related() { return this.project ? getRelatedProjects(this.project, 3) : []; },
+    related() { return this.project ? getRelatedProjects(this.projectList, this.project, 3) : []; },
     pillText() {
       const p = this.project;
       return [p.name, [p.type, p.location].filter(Boolean).join(' ')].filter(Boolean).join(' · ');
@@ -257,6 +261,9 @@ export default {
         .filter(Boolean);
     },
   },
+  created() {
+    this.$store.dispatch('projects/fetch');
+  },
   watch: {
     slug: {
       immediate: true,
@@ -266,6 +273,8 @@ export default {
         this.activeKey = '';
       },
     },
+    // Dự án chỉ có sau khi tải xong dữ liệu -> cập nhật tiêu đề/mô tả SEO lúc đó
+    project() { this.applyMeta(); },
   },
   mounted() {
     this.measureHeader();

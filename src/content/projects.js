@@ -60,12 +60,16 @@ function shots(slug, name, spaceKey, captions, label) {
   }));
 }
 
-function basic(slug, name, extra) {
+/**
+ * Dự án "rỗng" với đủ mọi trường (giá trị mặc định). Dùng làm khuôn khi tạo dự án
+ * mới trong trang quản trị và để bù các trường còn thiếu của dự án lưu trong CSDL.
+ */
+export function emptyProject(slug = '', name = '') {
   return {
     slug,
     name,
     subtitle: '', // hiện sau tên ở thẻ dự án: "KA-House - <subtitle>"
-    title: `Thiết kế & thi công nội thất – ${name}`,
+    title: name ? `Thiết kế & thi công nội thất – ${name}` : '',
     type: '', // Nhà phố / Căn hộ / Biệt thự / Văn phòng... (dùng cho bộ lọc)
     location: '', // vd: 'TP. Hồ Chí Minh'
     area: null, // m², để null nếu không công khai
@@ -74,22 +78,52 @@ function basic(slug, name, extra) {
     scope: '', // hạng mục
     materials: '', // vật liệu
     featured: false, // true: thẻ có nhãn "TIÊU BIỂU" và ưu tiên ở trang chủ
-    cover: `/images/du-an/${slug}/cover.jpg`,
-    coverAlt: `Hình ảnh dự án ${name}`,
+    cover: '',
+    coverAlt: '',
     coverCaption: '',
     summary: '', // mô tả ngắn 1–2 dòng (hiện ở "Dự án tương tự")
-    seoDescription: `${name} — dự án nội thất do HTM Design & Build thiết kế và thi công. Xem hình ảnh dự án theo từng không gian.`,
+    seoDescription: '',
     storyTitle: '',
     story: [],
     storyImage: '',
     planImage: '', // ảnh vuông cạnh bảng thông tin (vd: mặt bằng)
     planCaption: '',
     skus: [], // mã sản phẩm HTM đã dùng trong dự án, vd ['BLV01', 'TGY02']
-    spaces: [],
+    spaces: [], // [{ key, label?, layout, mood, tone, images: [{ src, alt, caption }] }]
+  };
+}
+
+/** Chuẩn hóa 1 dự án đọc từ CSDL: bù trường thiếu, ép kiểu mảng. */
+export function normalizeProject(raw) {
+  const base = emptyProject(raw.slug || '', raw.name || '');
+  const p = { ...base, ...raw };
+  p.story = Array.isArray(p.story) ? p.story.filter(Boolean) : [];
+  p.skus = Array.isArray(p.skus) ? p.skus : [];
+  p.spaces = (Array.isArray(p.spaces) ? p.spaces : []).map((sp) => ({
+    layout: '', mood: '', tone: '', ...sp,
+    images: (Array.isArray(sp.images) ? sp.images : [])
+      .filter((im) => im && im.src)
+      .map((im) => ({ src: im.src, alt: im.alt || '', caption: im.caption || '' })),
+  }));
+  if (!p.title && p.name) p.title = `Thiết kế & thi công nội thất – ${p.name}`;
+  if (!p.seoDescription && p.name) {
+    p.seoDescription = `${p.name} — dự án nội thất do HTM Design & Build thiết kế và thi công. Xem hình ảnh dự án theo từng không gian.`;
+  }
+  return p;
+}
+
+function basic(slug, name, extra) {
+  return {
+    ...emptyProject(slug, name),
+    cover: `/images/du-an/${slug}/cover.jpg`,
+    coverAlt: `Hình ảnh dự án ${name}`,
+    seoDescription: `${name} — dự án nội thất do HTM Design & Build thiết kế và thi công. Xem hình ảnh dự án theo từng không gian.`,
     ...extra,
   };
 }
 
+// Dữ liệu mẫu có sẵn trong mã nguồn: dùng khi chưa cài API trang quản trị (public/api),
+// và là nguồn để "Nhập dữ liệu mẫu" trong /admin.
 export const projects = [
   basic('ka-house', 'KA-House', {
     subtitle: 'Thiết kế & thi công nội thất trọn gói',

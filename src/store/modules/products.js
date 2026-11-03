@@ -1,3 +1,5 @@
+import siteContent from '@/content/siteContent';
+import { sortTopCategories } from '@/utils/category';
 import sheetService from '@/services/sheetService';
 
 /**
@@ -32,7 +34,8 @@ export default {
           if (path[0]) set.add(path[0]);
         });
       });
-      return Array.from(set).sort((a, b) => a.localeCompare(b, 'vi'));
+      // Ưu tiên theo siteContent.categoryOrder (phòng ngủ, phòng khách, bếp...), còn lại A-Z
+      return sortTopCategories(Array.from(set), siteContent.categoryOrder);
     },
   },
 

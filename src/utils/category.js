@@ -26,6 +26,40 @@ export function productMatchesCategoryPath(product, catPath) {
   });
 }
 
+/** Chuẩn hóa tên để so khớp: bỏ dấu, bỏ hoa/thường, bỏ ký tự đặc biệt ("&"...). */
+function normName(str) {
+  return String(str || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+/**
+ * Sắp xếp danh mục cấp 1: các danh mục có trong `priority` đứng đầu theo đúng thứ tự
+ * đó; phần còn lại xếp sau theo A-Z. Mỗi phần tử của `priority` có thể có nhiều
+ * cách gọi, ngăn cách bằng "|" (xem categoryOrder trong siteContent.js).
+ * @param {string[]} names - tên các danh mục cấp 1
+ * @param {string[]} priority
+ * @returns {string[]}
+ */
+export function sortTopCategories(names, priority = []) {
+  const rank = (name) => {
+    const n = normName(name);
+    const idx = priority.findIndex((entry) => entry.split('|').some((alias) => normName(alias) === n));
+    return idx === -1 ? Infinity : idx;
+  };
+  return names.slice().sort((a, b) => {
+    const ra = rank(a);
+    const rb = rank(b);
+    if (ra !== rb) return ra - rb;
+    return a.localeCompare(b, 'vi');
+  });
+}
+
 /**
  * Lấy danh sách danh mục CON trực tiếp của 1 đường dẫn cha, từ toàn bộ sản phẩm.
  * @param {object[]} products
