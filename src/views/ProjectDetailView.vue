@@ -11,7 +11,7 @@
       <span class="pj-pill">{{ pillText }}</span>
       <h1 class="pj-title">{{ project.title }}</h1>
       <div class="pj-hero-btns">
-        <button type="button" class="pj-btn pj-btn-line" v-if="totalImages" @click="scrollToSpace(spaces[0] && spaces[0].key)">
+        <button type="button" class="pj-btn pj-btn-line" v-if="totalImages" @click="scrollToSpace(spaces[0] && spaces[0].anchor)">
           <i class="fa-solid fa-images"></i> Xem {{ totalImages }} ảnh dự án
         </button>
         <button type="button" class="pj-btn pj-btn-fill" @click="scrollToId('bao-gia-du-an')">Nhận báo giá</button>
@@ -51,17 +51,17 @@
     <!-- ===== THANH LỌC KHÔNG GIAN (dính khi cuộn) ===== -->
     <div class="pj-sticky" v-if="spaces.length" :style="{ top: headerH + 'px' }" role="navigation" aria-label="Không gian trong dự án">
       <div class="pj-chips">
-        <button type="button" class="pj-chip" :class="{ on: !activeKey }" @click="scrollToSpace(spaces[0].key)">
+        <button type="button" class="pj-chip" :class="{ on: !activeKey }" @click="scrollToSpace(spaces[0].anchor)">
           Tất cả <b>{{ totalImages }}</b>
         </button>
         <button
           v-for="s in spaces"
-          :key="'chip-' + s.key"
+          :key="'chip-' + s.anchor"
           type="button"
           class="pj-chip"
-          :class="{ on: activeKey === s.key }"
-          :aria-current="activeKey === s.key ? 'true' : null"
-          @click="scrollToSpace(s.key)"
+          :class="{ on: activeKey === s.anchor }"
+          :aria-current="activeKey === s.anchor ? 'true' : null"
+          @click="scrollToSpace(s.anchor)"
         >{{ s.label }} <b>{{ s.count }}</b></button>
       </div>
     </div>
@@ -69,7 +69,7 @@
     <!-- ===== CÁC PHẦN ẢNH THEO KHÔNG GIAN ===== -->
     <div class="pj-spaces" v-if="spaces.length">
       <template v-for="(s, i) in spaces">
-        <section :key="'sec-' + s.key" :id="s.key" class="pj-space">
+        <section :key="'sec-' + s.anchor" :id="s.anchor" class="pj-space">
           <header class="pj-space-head">
             <div>
               <p class="pj-space-index">{{ pad(s.index) }} / {{ pad(s.total) }}</p>
@@ -330,8 +330,8 @@ export default {
         const line = this.headerH + 100;
         let current = '';
         this.spaces.forEach((s) => {
-          const el = document.getElementById(s.key);
-          if (el && el.getBoundingClientRect().top <= line) current = s.key;
+          const el = document.getElementById(s.anchor);
+          if (el && el.getBoundingClientRect().top <= line) current = s.anchor;
         });
         if (current !== this.activeKey) this.activeKey = current;
       });

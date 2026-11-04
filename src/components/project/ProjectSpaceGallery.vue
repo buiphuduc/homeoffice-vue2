@@ -1,5 +1,14 @@
 <template>
   <div class="sg" ref="root">
+    <!-- Auto layout: full width, preserve each uploaded photo's original ratio. -->
+    <div v-if="mode === 'natural'" class="sg-natural">
+      <project-photo
+        v-for="it in shown" :key="it.img.src"
+        :image="it.img" :placeholder="it.ph" natural
+        @broken="markFailed"
+      ></project-photo>
+    </div>
+
     <!-- 1 ảnh -->
     <div v-if="mode === 'single'" class="sg-single" style="--ratio: 16 / 9">
       <project-photo :image="shown[0].img" :placeholder="shown[0].ph" @broken="markFailed"></project-photo>
@@ -101,10 +110,12 @@ export default {
     },
     mode() {
       const n = this.shown.length;
+      if (!this.layout) return 'natural';
       if (n <= 1) return 'single';
       if (this.layout === 'split') return 'split';
       if (this.layout === 'feature' && n >= 3) return 'feature';
-      if (this.layout === '' && n >= 5) return 'feature';
+      if (this.layout === 'feature' && n >= 2) return 'feature';
+      if (this.layout === 'feature') return 'single';
       return 'grid';
     },
   },
@@ -146,6 +157,7 @@ export default {
 
 <style scoped>
 .sg-feature, .sg-grid, .sg-split, .sg-rest { display: grid; grid-template-columns: 1fr; gap: 24px; }
+.sg-natural { display: grid; grid-template-columns: 1fr; gap: 24px; }
 .sg-split-wrap { display: flex; flex-direction: column; gap: 24px; }
 .sg-side { display: flex; flex-direction: column; gap: 24px; }
 .sg-cell, .sg-main { min-width: 0; }

@@ -133,7 +133,7 @@
           <label class="adm-field">
             <span>Loại không gian</span>
             <select class="adm-input" v-model="sp.key">
-              <option v-for="(label, key) in spaceOptions" :key="key" :value="key" :disabled="usedKey(key, si)">{{ label }}</option>
+              <option v-for="(label, key) in spaceOptions" :key="key" :value="key">{{ label }}</option>
             </select>
           </label>
           <label class="adm-field"><span>Tên hiển thị riêng (tùy chọn)</span><input class="adm-input" v-model="sp.label" placeholder="VD: Phòng ngủ Master"></label>
@@ -202,7 +202,8 @@ export default {
       return Object.keys(set);
     },
     canAddSpace() {
-      return this.form && this.form.spaces.length < Object.keys(projectSpaces).length;
+      // A project may contain several rooms of the same type.
+      return this.form && this.form.spaces.length < 30;
     },
     skuChips() {
       if (!this.form) return [];
@@ -281,16 +282,11 @@ export default {
     autoSlug() {
       if (this.isNew && !this.slugTouched) this.form.slug = toSlug(this.form.name);
     },
-    usedKey(key, idx) {
-      return this.form.spaces.some((s, i) => i !== idx && s.key === key);
-    },
     addSpace() {
-      const key = Object.keys(projectSpaces).find((k) => !this.usedKey(k, -1));
-      if (key) {
-        this.form.spaces.push({
-          key, label: '', layout: '', mood: '', tone: '', images: [],
-        });
-      }
+      const keys = Object.keys(projectSpaces);
+      const previous = this.form.spaces[this.form.spaces.length - 1];
+      const key = previous ? previous.key : keys[0];
+      this.form.spaces.push({ key, label: '', layout: '', mood: '', tone: '', images: [] });
     },
     removeSpace(i) {
       const sp = this.form.spaces[i];

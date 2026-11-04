@@ -35,12 +35,15 @@ export function countImages(project) {
 /** Các không gian có ảnh, kèm nhãn, số ảnh và số thứ tự để hiển thị. */
 export function getSpaceList(project) {
   const list = (project.spaces || []).filter((s) => countSpaceImages(s) > 0);
+  const seen = {};
   return list.map((s, i) => ({
     ...s,
     label: s.label || spaceLabel(s.key),
     count: countSpaceImages(s),
     index: i + 1,
     total: list.length,
+    // Keep in-page anchors unique even when several spaces share one type.
+    anchor: (seen[s.key] = (seen[s.key] || 0) + 1) === 1 ? s.key : `${s.key}-${seen[s.key]}`,
   }));
 }
 

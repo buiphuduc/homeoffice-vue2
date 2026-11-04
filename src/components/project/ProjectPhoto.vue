@@ -4,7 +4,7 @@
       :is="clickable ? 'button' : 'div'"
       v-bind="clickable ? { type: 'button' } : {}"
       class="pp-frame"
-      :class="{ 'is-clickable': clickable }"
+      :class="{ 'is-clickable': clickable, 'is-natural': natural }"
       :aria-label="clickable ? 'Xem ảnh này ở vị trí đầu tiên' : null"
       @click="clickable && $emit('select')"
     >
@@ -35,6 +35,7 @@ export default {
     image: { type: Object, required: true },
     placeholder: { type: Boolean, default: false },
     clickable: { type: Boolean, default: false },
+    natural: { type: Boolean, default: false },
   },
 };
 </script>
@@ -48,6 +49,9 @@ export default {
 }
 .pp-frame.is-clickable { cursor: pointer; }
 .pp-frame img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+.pp-frame.is-natural { height: auto; aspect-ratio: auto; overflow: visible; background: transparent; }
+.pp-frame.is-natural img { width: 100%; height: auto; object-fit: contain; }
+.pp-frame.is-natural .pp-ph { position: relative; min-height: 180px; }
 .pp-frame.is-clickable:hover img { transform: scale(1.04); }
 .pp-frame:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .pp-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
