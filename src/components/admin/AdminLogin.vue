@@ -4,8 +4,8 @@
       <h1>Quản trị HTM</h1>
       <p class="adm-hint">Đăng nhập để thêm, sửa, xóa sản phẩm và dự án.</p>
       <label class="adm-field">
-        <span>Email</span>
-        <input class="adm-input" type="email" v-model.trim="email" autocomplete="username" required>
+        <span>Tên đăng nhập</span>
+        <input class="adm-input" type="text" v-model.trim="username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
       </label>
       <label class="adm-field">
         <span>Mật khẩu</span>
@@ -25,14 +25,14 @@ import * as sb from '@/services/api';
 export default {
   name: 'AdminLogin',
   data() {
-    return { email: '', password: '', busy: false, error: '' };
+    return { username: '', password: '', busy: false, error: '' };
   },
   methods: {
     async submit() {
       this.busy = true;
       this.error = '';
       try {
-        await sb.signIn(this.email, this.password);
+        await sb.signIn(this.username, this.password);
         this.$emit('logged-in');
       } catch (e) {
         this.error = e.message || 'Đăng nhập không thành công.';

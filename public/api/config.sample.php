@@ -14,8 +14,8 @@ return [
     'db_user' => 'u123456789_htm',
     'db_pass' => 'MAT_KHAU_MYSQL',
 
-    // Mã dùng 1 LẦN để tạo tài khoản admin đầu tiên (ít nhất 8 ký tự, tự đặt, khó đoán).
-    // Sau khi tạo xong tài khoản đầu tiên, mã này không còn tác dụng.
+    // Mã dùng 1 LẦN để tạo tài khoản IT (tài khoản quản trị duy nhất, có quyền thêm tài khoản khác).
+    // Ít nhất 8 ký tự, tự đặt, khó đoán. Sau khi tạo xong tài khoản IT, mã này không còn tác dụng.
     'setup_key' => 'DAT-MOT-MA-BI-MAT-O-DAY',
 
     // Thư mục lưu ảnh tải lên và đường dẫn công khai (thường không cần đổi)

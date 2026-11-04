@@ -14,7 +14,7 @@ import config from '@/config';
  * ------------------------------------------------------------------
  */
 
-const USER_KEY = 'htm_admin_user'; // chỉ lưu email để hiển thị (không phải mật khẩu/token)
+const USER_KEY = 'htm_admin_user'; // chỉ lưu tên đăng nhập + vai trò để hiển thị (không phải mật khẩu/token)
 let authLostHandler = null;
 
 export function isConfigured() {
@@ -85,22 +85,23 @@ async function call(r, {
 }
 
 /* ---------- xác thực ---------- */
-/** @returns {Promise<{needs_setup: boolean, user: {email: string}|null}>} */
+/** @returns {Promise<{needs_setup: boolean, user: {username: string, role: 'it'|'editor'}|null}>} */
 export async function authStatus() {
   const s = await call('status');
-  if (s.user) writeUser({ email: s.user.email }); else clearUser();
+  if (s.user) writeUser({ username: s.user.username, role: s.user.role }); else clearUser();
   return s;
 }
 
-export async function signIn(email, password) {
-  const r = await call('login', { method: 'POST', body: { email, password } });
-  writeUser({ email: r.email });
+export async function signIn(username, password) {
+  const r = await call('login', { method: 'POST', body: { username, password } });
+  writeUser({ username: r.username, role: r.role });
   return r;
 }
 
-export async function setupFirstAdmin(key, email, password) {
-  const r = await call('setup', { method: 'POST', body: { key, email, password } });
-  writeUser({ email: r.email });
+/** Tạo tài khoản IT (duy nhất) lần đầu, cần mã cài đặt (setup_key) trong api/config.php. */
+export async function setupFirstAdmin(key, username, password) {
+  const r = await call('setup', { method: 'POST', body: { key, username, password } });
+  writeUser({ username: r.username, role: r.role });
   return r;
 }
 
@@ -163,9 +164,10 @@ export async function removeFiles(paths) {
   try { await call('files_delete', { method: 'POST', body: { paths: list }, authed: true }); } catch (e) { /* không quan trọng */ }
 }
 
-/* ---------- tài khoản quản trị ---------- */
+/* ---------- tài khoản quản trị (chỉ tài khoản IT dùng được listAdmins/addAdmin/removeAdmin/resetAdminPassword) ---------- */
 export function listAdmins() { return call('admins', { authed: true }); }
-export function addAdmin(email, password) { return call('admins', { method: 'POST', body: { email, password }, authed: true }); }
+export function addAdmin(username, password) { return call('admins', { method: 'POST', body: { username, password }, authed: true }); }
+export function resetAdminPassword(id, password) { return call('admins_reset', { method: 'POST', body: { id, password }, authed: true }); }
 export function removeAdmin(id) { return call('admins_delete', { method: 'POST', body: { id }, authed: true }); }
 export function changePassword(oldPassword, newPassword) {
   return call('password', { method: 'POST', body: { old: oldPassword, new: newPassword }, authed: true });

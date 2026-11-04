@@ -1,5 +1,5 @@
 # Không cho xem thư mục, không cho tải file cấu hình / dấu hiệu nội bộ
 Options -Indexes
-<FilesMatch "^(config\.php|config\.sample\.php|\.schema_v1)$">
+<FilesMatch "^(config\.php|config\.sample\.php|\.schema_v[0-9]+)$">
   Require all denied
 </FilesMatch>

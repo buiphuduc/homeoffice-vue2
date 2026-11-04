@@ -28,7 +28,7 @@
         <div class="adm-top-in">
           <strong class="adm-brand">HTM · Quản trị</strong>
           <span class="adm-grow"></span>
-          <span class="adm-muted adm-email">{{ session.email }}</span>
+          <span class="adm-muted adm-email">{{ session.username }}<span class="adm-role" v-if="session.role === 'it'">IT</span></span>
           <router-link class="adm-btn adm-btn-sm" to="/" target="_blank">Xem website</router-link>
           <button type="button" class="adm-btn adm-btn-sm" @click="logout">Đăng xuất</button>
         </div>
@@ -46,7 +46,7 @@
       <main class="adm-main">
         <admin-products v-if="tab === 'san-pham'" key="p"></admin-products>
         <admin-projects v-else-if="tab === 'du-an'" key="j"></admin-projects>
-        <admin-users v-else-if="tab === 'tai-khoan'" key="u"></admin-users>
+        <admin-users v-else-if="tab === 'tai-khoan'" key="u" :role="session.role"></admin-users>
         <admin-tools v-else key="t"></admin-tools>
       </main>
     </template>
@@ -109,7 +109,7 @@ export default {
       try {
         const s = await sb.authStatus();
         this.status = s;
-        this.session = s.user ? { email: s.user.email } : null;
+        this.session = s.user ? { username: s.user.username, role: s.user.role } : null;
       } catch (e) {
         this.status = null;
         this.apiError = e.message;
@@ -141,6 +141,7 @@ export default {
 .adm-top { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid var(--line); }
 .adm-top-in { max-width: 1280px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 10px; }
 .adm-brand { font-size: 16px; letter-spacing: .02em; }
+.adm-role { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 4px; background: var(--primary); color: #fff; font-size: 11px; font-weight: 600; }
 .adm-email { display: none; }
 .adm-tabs { max-width: 1280px; margin: 0 auto; padding: 0 20px; display: flex; gap: 6px; }
 .adm-tab { padding: 10px 16px; font-weight: 500; color: var(--ink-soft); border-bottom: 2px solid transparent; }

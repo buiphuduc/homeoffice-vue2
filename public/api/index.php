@@ -78,7 +78,7 @@ try {
 
 function ensureSchema(PDO $pdo)
 {
-    $marker = __DIR__ . '/.schema_v1';
+    $marker = __DIR__ . '/.schema_v2';
     if (is_file($marker)) {
         return;
     }
@@ -95,12 +95,15 @@ function ensureSchema(PDO $pdo)
         sort_order INT NOT NULL DEFAULT 0,
         updated_at DATETIME NOT NULL
     ) $opts");
+    // Tài khoản quản trị: đăng nhập bằng TÊN ĐĂNG NHẬP; role 'it' (duy nhất 1 tài khoản, được quản lý tài khoản)
+    // hoặc 'editor' (nhân viên: chỉ quản lý sản phẩm/dự án)
     $pdo->exec("CREATE TABLE IF NOT EXISTS admins (
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        email VARCHAR(190) NOT NULL,
+        username VARCHAR(40) NULL,
         password_hash VARCHAR(255) NOT NULL,
+        role VARCHAR(20) NOT NULL DEFAULT 'editor',
         created_at DATETIME NOT NULL,
-        UNIQUE KEY uq_admin_email (email)
+        UNIQUE KEY uq_admin_username (username)
     ) $opts");
     $pdo->exec("CREATE TABLE IF NOT EXISTS admin_tokens (
         token_hash CHAR(64) NOT NULL PRIMARY KEY,
@@ -116,7 +119,66 @@ function ensureSchema(PDO $pdo)
         created_at DATETIME NOT NULL,
         KEY idx_att (ip, created_at)
     ) $opts");
+    migrateAdmins($pdo);
     @file_put_contents($marker, (string) time());
+}
+
+/** Chuẩn hóa chuỗi thành tên đăng nhập hợp lệ (dùng khi nâng cấp từ bản cũ đăng nhập bằng email). */
+function usernameFromText($text)
+{
+    $u = strtolower((string) $text);
+    $u = preg_replace('/[^a-z0-9._-]+/', '.', $u);
+    $u = trim($u, '._-');
+    if (strlen($u) < 3) {
+        $u = 'user' . $u;
+    }
+    return substr($u, 0, 32);
+}
+
+/** Nâng cấp bảng admins từ bản cũ (đăng nhập bằng email) lên bản dùng tên đăng nhập + vai trò. */
+function migrateAdmins(PDO $pdo)
+{
+    $cols = array_column($pdo->query('SHOW COLUMNS FROM admins')->fetchAll(), 'Field');
+    if (!in_array('username', $cols, true)) {
+        $pdo->exec('ALTER TABLE admins ADD COLUMN username VARCHAR(40) NULL AFTER id');
+    }
+    if (!in_array('role', $cols, true)) {
+        $pdo->exec("ALTER TABLE admins ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'editor'");
+    }
+    if (in_array('email', $cols, true)) {
+        $pdo->exec('ALTER TABLE admins MODIFY email VARCHAR(190) NULL');
+    }
+    if (!$pdo->query("SHOW INDEX FROM admins WHERE Key_name = 'uq_admin_username'")->fetchAll()) {
+        $pdo->exec('ALTER TABLE admins ADD UNIQUE KEY uq_admin_username (username)');
+    }
+    $rows = $pdo->query('SELECT * FROM admins ORDER BY id ASC')->fetchAll();
+    $used = [];
+    foreach ($rows as $r) {
+        if (!empty($r['username'])) {
+            $used[strtolower($r['username'])] = true;
+        }
+    }
+    foreach ($rows as $r) {
+        if (!empty($r['username'])) {
+            continue;
+        }
+        $local = isset($r['email']) && strpos((string) $r['email'], '@') !== false ? strstr($r['email'], '@', true) : (string) ($r['email'] ?? 'admin');
+        $base = usernameFromText($local);
+        $name = $base;
+        for ($i = 2; isset($used[$name]); $i++) {
+            $name = substr($base, 0, 28) . $i;
+        }
+        $used[$name] = true;
+        $pdo->prepare('UPDATE admins SET username = ? WHERE id = ?')->execute([$name, $r['id']]);
+    }
+    // Luôn có đúng 1 tài khoản IT: nếu chưa có thì tài khoản tạo đầu tiên là IT
+    $hasIt = (int) $pdo->query("SELECT COUNT(*) FROM admins WHERE role = 'it'")->fetchColumn();
+    if ($hasIt === 0) {
+        $first = $pdo->query('SELECT id FROM admins ORDER BY id ASC LIMIT 1')->fetchColumn();
+        if ($first) {
+            $pdo->prepare("UPDATE admins SET role = 'it' WHERE id = ?")->execute([$first]);
+        }
+    }
 }
 ensureSchema($pdo);
 
@@ -181,11 +243,11 @@ function currentAdmin(PDO $pdo)
         return $cache;
     }
     $hash = hash('sha256', $token);
-    $st = $pdo->prepare('SELECT a.id, a.email, t.expires_at FROM admin_tokens t JOIN admins a ON a.id = t.admin_id WHERE t.token_hash = ? AND t.expires_at > ?');
+    $st = $pdo->prepare('SELECT a.id, a.username, a.role, t.expires_at FROM admin_tokens t JOIN admins a ON a.id = t.admin_id WHERE t.token_hash = ? AND t.expires_at > ?');
     $st->execute([$hash, nowUtc()]);
     $row = $st->fetch();
     if ($row) {
-        $cache = ['id' => (int) $row['id'], 'email' => $row['email'], 'hash' => $hash];
+        $cache = ['id' => (int) $row['id'], 'username' => $row['username'], 'role' => $row['role'], 'hash' => $hash];
         // gia hạn phiên khi còn dưới 7 ngày
         if (strtotime($row['expires_at'] . ' UTC') - time() < 7 * 86400) {
             $exp = time() + SESSION_DAYS * 86400;
@@ -205,6 +267,15 @@ function requireAdmin(PDO $pdo)
     return $a;
 }
 
+function requireIT(PDO $pdo)
+{
+    $a = requireAdmin($pdo);
+    if ($a['role'] !== 'it') {
+        fail('Chỉ tài khoản IT mới được thực hiện thao tác này.', 403);
+    }
+    return $a;
+}
+
 function startSession(PDO $pdo, $adminId)
 {
     $token = bin2hex(random_bytes(32));
@@ -214,9 +285,15 @@ function startSession(PDO $pdo, $adminId)
     setAuthCookie($token, time() + SESSION_DAYS * 86400);
 }
 
-function validEmail($email)
+/** Tên đăng nhập: 3–32 ký tự, chữ thường không dấu, số, dấu . _ - (bắt đầu bằng chữ hoặc số). */
+function cleanUsername($u)
 {
-    return is_string($email) && strlen($email) <= 190 && filter_var($email, FILTER_VALIDATE_EMAIL);
+    return strtolower(trim((string) $u));
+}
+
+function validUsername($u)
+{
+    return is_string($u) && (bool) preg_match('/^[a-z0-9][a-z0-9._-]{2,31}$/', $u);
 }
 
 function validPassword($pw)
@@ -415,10 +492,10 @@ switch ($route) {
     case 'status': {
         $count = (int) $pdo->query('SELECT COUNT(*) FROM admins')->fetchColumn();
         $a = currentAdmin($pdo);
-        out(['needs_setup' => $count === 0, 'user' => $a ? ['email' => $a['email']] : null]);
+        out(['needs_setup' => $count === 0, 'user' => $a ? ['username' => $a['username'], 'role' => $a['role']] : null]);
     }
 
-    case 'setup': { // tạo tài khoản admin đầu tiên (chỉ khi chưa có admin nào)
+    case 'setup': { // tạo tài khoản IT (duy nhất) lần đầu — chỉ khi chưa có tài khoản nào
         if ($method !== 'POST') {
             fail('Sai phương thức.', 405);
         }
@@ -433,16 +510,17 @@ switch ($route) {
         if (!hash_equals($setupKey, (string) ($b['key'] ?? ''))) {
             fail('Mã cài đặt không đúng (xem mục setup_key trong api/config.php).', 403);
         }
-        if (!validEmail($b['email'] ?? '')) {
-            fail('Email không hợp lệ.');
+        $username = cleanUsername($b['username'] ?? '');
+        if (!validUsername($username)) {
+            fail('Tên đăng nhập gồm 3–32 ký tự: chữ thường không dấu, số, dấu . _ - (vd: it.admin).');
         }
         if (!validPassword($b['password'] ?? '')) {
             fail('Mật khẩu cần ít nhất 8 ký tự.');
         }
-        $pdo->prepare('INSERT INTO admins (email, password_hash, created_at) VALUES (?,?,?)')
-            ->execute([strtolower($b['email']), password_hash($b['password'], PASSWORD_BCRYPT), nowUtc()]);
+        $pdo->prepare("INSERT INTO admins (username, password_hash, role, created_at) VALUES (?,?,'it',?)")
+            ->execute([$username, password_hash($b['password'], PASSWORD_BCRYPT), nowUtc()]);
         startSession($pdo, (int) $pdo->lastInsertId());
-        out(['ok' => true, 'email' => strtolower($b['email'])]);
+        out(['ok' => true, 'username' => $username, 'role' => 'it']);
     }
 
     case 'login': {
@@ -457,20 +535,20 @@ switch ($route) {
         if ((int) $st->fetchColumn() >= 8) {
             fail('Đăng nhập sai quá nhiều lần. Vui lòng đợi 15 phút rồi thử lại.', 429);
         }
-        $email = strtolower(trim((string) ($b['email'] ?? '')));
-        $st = $pdo->prepare('SELECT id, password_hash FROM admins WHERE email = ?');
-        $st->execute([$email]);
+        $username = cleanUsername($b['username'] ?? '');
+        $st = $pdo->prepare('SELECT id, password_hash, role FROM admins WHERE username = ?');
+        $st->execute([$username]);
         $row = $st->fetch();
-        // Email không tồn tại: vẫn kiểm tra với 1 hash giả để thời gian phản hồi giống nhau
-        $hash = $row ? $row['password_hash'] : '$2y$10$METGj1yLvOKxW4nOIJjBiOzoXLw95Rm7nuDaVqfbKyQBBy.ONrdgS';
+        // Tên đăng nhập không tồn tại: vẫn kiểm tra với 1 hash giả để thời gian phản hồi giống nhau
+        $hash = $row ? $row['password_hash'] : '$2y$10$cOcxe7J6iY3KwfUE3rXmpOH8WtMZq3rMrHILTxGxcHzwRpm5G11LS';
         $ok = password_verify((string) ($b['password'] ?? ''), $hash) && $row;
         if (!$ok) {
             $pdo->prepare('INSERT INTO login_attempts (ip, created_at) VALUES (?,?)')->execute([$ip, nowUtc()]);
-            fail('Email hoặc mật khẩu không đúng.', 401);
+            fail('Tên đăng nhập hoặc mật khẩu không đúng.', 401);
         }
         $pdo->prepare('DELETE FROM login_attempts WHERE ip = ?')->execute([$ip]);
         startSession($pdo, (int) $row['id']);
-        out(['ok' => true, 'email' => $email]);
+        out(['ok' => true, 'username' => $username, 'role' => $row['role']]);
     }
 
     case 'logout': {
@@ -533,10 +611,10 @@ switch ($route) {
         out(['deleted' => deleteFiles($UPLOAD_DIR, $b['paths'] ?? [])]);
     }
 
-    case 'admins': { // danh sách / thêm tài khoản quản trị
-        $me = requireAdmin($pdo);
+    case 'admins': { // danh sách / thêm tài khoản — CHỈ tài khoản IT
+        $me = requireIT($pdo);
         if ($method === 'GET') {
-            $rows = $pdo->query('SELECT id, email, created_at FROM admins ORDER BY id ASC')->fetchAll();
+            $rows = $pdo->query('SELECT id, username, role, created_at FROM admins ORDER BY id ASC')->fetchAll();
             foreach ($rows as &$r) {
                 $r['id'] = (int) $r['id'];
                 $r['me'] = $r['id'] === $me['id'];
@@ -547,20 +625,21 @@ switch ($route) {
             fail('Sai phương thức.', 405);
         }
         $b = jsonBody();
-        $email = strtolower(trim((string) ($b['email'] ?? '')));
-        if (!validEmail($email)) {
-            fail('Email không hợp lệ.');
+        $username = cleanUsername($b['username'] ?? '');
+        if (!validUsername($username)) {
+            fail('Tên đăng nhập gồm 3–32 ký tự: chữ thường không dấu, số, dấu . _ - (vd: mkt01).');
         }
         if (!validPassword($b['password'] ?? '')) {
             fail('Mật khẩu cần ít nhất 8 ký tự.');
         }
-        $st = $pdo->prepare('SELECT id FROM admins WHERE email = ?');
-        $st->execute([$email]);
+        $st = $pdo->prepare('SELECT id FROM admins WHERE username = ?');
+        $st->execute([$username]);
         if ($st->fetch()) {
-            fail('Email này đã có tài khoản.');
+            fail('Tên đăng nhập này đã có.');
         }
-        $pdo->prepare('INSERT INTO admins (email, password_hash, created_at) VALUES (?,?,?)')
-            ->execute([$email, password_hash($b['password'], PASSWORD_BCRYPT), nowUtc()]);
+        // Tài khoản tạo thêm luôn là "editor" (không thể tạo thêm tài khoản IT)
+        $pdo->prepare("INSERT INTO admins (username, password_hash, role, created_at) VALUES (?,?,'editor',?)")
+            ->execute([$username, password_hash($b['password'], PASSWORD_BCRYPT), nowUtc()]);
         out(['ok' => true]);
     }
 
@@ -568,17 +647,43 @@ switch ($route) {
         if ($method !== 'POST') {
             fail('Sai phương thức.', 405);
         }
-        $me = requireAdmin($pdo);
+        $me = requireIT($pdo);
         $b = jsonBody();
         $id = (int) ($b['id'] ?? 0);
-        if ($id === $me['id']) {
-            fail('Không thể tự xóa tài khoản đang đăng nhập.');
+        $st = $pdo->prepare('SELECT role FROM admins WHERE id = ?');
+        $st->execute([$id]);
+        $target = $st->fetch();
+        if (!$target) {
+            fail('Không tìm thấy tài khoản.', 404);
         }
-        if ((int) $pdo->query('SELECT COUNT(*) FROM admins')->fetchColumn() <= 1) {
-            fail('Phải còn ít nhất một tài khoản quản trị.');
+        if ($id === $me['id'] || $target['role'] === 'it') {
+            fail('Không thể xóa tài khoản IT.');
         }
         $pdo->prepare('DELETE FROM admin_tokens WHERE admin_id = ?')->execute([$id]);
         $pdo->prepare('DELETE FROM admins WHERE id = ?')->execute([$id]);
+        out(['ok' => true]);
+    }
+
+    case 'admins_reset': { // IT đặt lại mật khẩu cho một tài khoản (khi nhân viên quên mật khẩu)
+        if ($method !== 'POST') {
+            fail('Sai phương thức.', 405);
+        }
+        $me = requireIT($pdo);
+        $b = jsonBody();
+        $id = (int) ($b['id'] ?? 0);
+        if ($id === $me['id']) {
+            fail('Hãy dùng mục "Đổi mật khẩu của tôi" cho tài khoản IT.');
+        }
+        if (!validPassword($b['password'] ?? '')) {
+            fail('Mật khẩu mới cần ít nhất 8 ký tự.');
+        }
+        $st = $pdo->prepare('SELECT id FROM admins WHERE id = ?');
+        $st->execute([$id]);
+        if (!$st->fetch()) {
+            fail('Không tìm thấy tài khoản.', 404);
+        }
+        $pdo->prepare('UPDATE admins SET password_hash = ? WHERE id = ?')->execute([password_hash($b['password'], PASSWORD_BCRYPT), $id]);
+        $pdo->prepare('DELETE FROM admin_tokens WHERE admin_id = ?')->execute([$id]); // buộc đăng nhập lại
         out(['ok' => true]);
     }
 
